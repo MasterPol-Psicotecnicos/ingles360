@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inglés 360 LPT · Sessions 5–6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bitter:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1EC; --paper:#FFFFFF; --ink:#1C2A24; --muted:#56655E; --line:#D3DBD4;
+  --green:#6BA539; --green-ink:#3F6E1A; --deep:#0E5641; --on-green:#FFFFFF;
+  --ps:#0E5641; --ps-bg:#E1EFE6;
+  --pc:#8A5200; --pc-bg:#FBEACB;
+  --pp:#22558F; --pp-bg:#E0EAF7;
+  --ok:#2E7D32; --ok-bg:#E4F2E2; --ko:#B3261E; --ko-bg:#FBE5E3;
+  --note-bg:#FFF4D6; --note-ink:#4F3B00;
+  --shadow:0 1px 2px rgba(20,40,30,.08);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111915; --paper:#1A2520; --ink:#E5EDE7; --muted:#A2B2A9; --line:#2E3C35;
+    --green:#7DBA48; --green-ink:#A8DA77; --deep:#86D3AE; --on-green:#0D1A10;
+    --ps:#8ED7B3; --ps-bg:#16342A; --pc:#F2B65A; --pc-bg:#3A2A0F; --pp:#93BDF0; --pp-bg:#162A41;
+    --ok:#83CF86; --ok-bg:#183019; --ko:#F2938A; --ko-bg:#3D1C1A;
+    --note-bg:#33290C; --note-ink:#F2DCA0; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111915; --paper:#1A2520; --ink:#E5EDE7; --muted:#A2B2A9; --line:#2E3C35;
+  --green:#7DBA48; --green-ink:#A8DA77; --deep:#86D3AE; --on-green:#0D1A10;
+  --ps:#8ED7B3; --ps-bg:#16342A; --pc:#F2B65A; --pc-bg:#3A2A0F; --pp:#93BDF0; --pp-bg:#162A41;
+  --ok:#83CF86; --ok-bg:#183019; --ko:#F2938A; --ko-bg:#3D1C1A;
+  --note-bg:#33290C; --note-ink:#F2DCA0; --shadow:none;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 132px);scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.55}
+h1,h2,h3,h4{font-family:"Bitter",Georgia,"Times New Roman",serif;line-height:1.2;margin:0}
+img{max-width:100%}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+
+/* ---------- Top bar (exam-like) ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.top-row{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:10px 18px}
+.badge{flex:none;width:52px;height:52px;border-radius:50%;border:5px solid var(--green);display:grid;place-items:center;font-family:"Bitter",serif;font-weight:700;font-size:13px;line-height:1;text-align:center;color:var(--green-ink)}
+.brand{min-width:0}
+.brand b{display:block;font-size:15px}
+.brand span{display:block;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tools{margin-left:auto;display:flex;align-items:center;gap:10px}
+.timer{display:flex;gap:2px;border:2px solid var(--green);padding:3px 10px;cursor:pointer;background:transparent;border-radius:3px}
+.timer div{text-align:center;min-width:44px}
+.timer strong{display:block;font-size:22px;line-height:1.1;color:var(--green-ink);font-variant-numeric:tabular-nums}
+.timer small{display:block;font-size:11px;color:var(--muted)}
+.timer.paused strong{opacity:.55}
+.timer.done{animation:blink 1s steps(2) 4}
+@keyframes blink{50%{background:var(--ko-bg)}}
+@media (prefers-reduced-motion: reduce){.timer.done{animation:none;background:var(--ko-bg)}}
+.tbtn{border:1px solid var(--line);background:transparent;border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;white-space:nowrap}
+.tbtn[aria-pressed="true"]{background:var(--note-bg);color:var(--note-ink);border-color:transparent}
+.steps{max-width:1100px;margin:0 auto;display:flex;gap:0;overflow-x:auto;padding:4px 18px 10px;scrollbar-width:thin}
+.steps a{flex:1 0 auto;min-width:92px;text-decoration:none;color:var(--muted);font-size:13px;text-align:center;position:relative;padding:4px 10px 0;white-space:nowrap}
+.steps a .dot{display:block;width:16px;height:16px;border-radius:50%;margin:6px auto 0;border:2px solid var(--line);background:var(--paper);position:relative;z-index:1;font-size:10px;line-height:12px;color:var(--on-green)}
+.steps a::after{content:"";position:absolute;left:0;right:0;bottom:7px;height:2px;background:var(--line)}
+.steps a.active{color:var(--green-ink);font-weight:700}
+.steps a.active .dot{border-color:var(--green);background:var(--green)}
+.steps a.done .dot{border-color:var(--green);background:var(--paper)}
+.steps a.done .dot::before{content:"✓";color:var(--green-ink);font-weight:700}
+@media (max-width:640px){.brand span{display:none}.tools .tbtn.hide-sm{display:none}}
+@media (max-width:480px){.brand{display:none}.top-row{gap:10px;padding:8px 12px}.badge{width:44px;height:44px;border-width:4px;font-size:11px}}
+
+/* ---------- Layout ---------- */
+main{max-width:860px;margin:0 auto;padding:12px 18px 80px}
+.hero{padding:34px 0 10px}
+.hero h1{font-size:clamp(28px,5vw,42px);font-weight:700;max-width:22ch}
+.hero p.lead{color:var(--muted);max-width:60ch;margin:12px 0 0}
+.contrast{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0 8px}
+.contrast div{padding:18px 18px 16px;border-radius:4px}
+.contrast .s{background:var(--ps-bg)}
+.contrast .c{background:var(--pc-bg)}
+.contrast q{display:block;line-height:1.25;font-family:"Bitter",serif;font-size:clamp(20px,3.2vw,27px);quotes:none;font-weight:700}
+.contrast .s q{color:var(--ps)} .contrast .c q{color:var(--pc)}
+.contrast span{display:block;font-size:15px;margin-top:6px;color:var(--ink)}
+@media (max-width:560px){.contrast{grid-template-columns:1fr}}
+
+section.block{padding-top:44px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);padding:12px 16px;margin-bottom:14px}
+.sec-head h2{font-size:22px}
+.sec-head .kind{color:var(--muted);font-size:17px}
+.instr{font-weight:700;color:var(--muted);margin:6px 0 12px}
+h3.sub{font-size:19px;margin:28px 0 10px}
+h4{font-size:16px;margin:16px 0 6px}
+p{margin:8px 0}
+.small{font-size:15px;color:var(--muted)}
+
+/* teacher notes */
+.tnote{display:none;background:var(--note-bg);color:var(--note-ink);padding:12px 14px;margin:12px 0;border-radius:4px;font-size:15px}
+.tnote strong:first-child{display:block;margin-bottom:2px}
+.tnote ul{margin:4px 0 0;padding-left:20px}
+body.teacher .tnote{display:block}
+
+/* exam-like question cards */
+.q,.gaptext{background:var(--paper);position:relative;padding:16px 18px 14px 62px;margin:0 0 10px;box-shadow:var(--shadow)}
+.q::before,.gaptext::before{content:"";position:absolute;left:0;top:0;width:46px;height:46px;background:var(--green);clip-path:polygon(0 0,100% 0,0 100%)}
+.qn{position:absolute;left:8px;top:5px;color:var(--on-green);font-weight:700;font-size:14px}
+.qt{margin:0 0 4px;line-height:2}
+.qtitle{font-weight:700;color:var(--deep);margin:0 0 6px}
+select{border:1px solid var(--line);background:var(--paper);border-radius:4px;padding:3px 6px;max-width:100%;font-size:16px;vertical-align:baseline}
+select.ok{border-color:var(--ok);background:var(--ok-bg)}
+select.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opts{display:grid;gap:4px;margin-top:4px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:5px 8px;border-radius:4px;cursor:pointer}
+.opt input{margin-top:5px;accent-color:var(--deep)}
+.opt.right{background:var(--ok-bg)}
+.opt.wrong{background:var(--ko-bg)}
+.fb{font-size:15px;margin-top:6px}
+.fb:empty{display:none}
+.fb .r{color:var(--ok);font-weight:700}
+.fb .w{color:var(--ko);font-weight:700}
+.fbs{list-style:none;padding:0;margin:-4px 0 14px;font-size:15px}
+.fbs li{padding:4px 0}
+.gapn{font-size:11px;font-weight:700;color:var(--green-ink);margin-right:2px}
+.gaptext p{line-height:2.1}
+
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 4px}
+.btn{border:0;border-radius:999px;padding:9px 20px;background:var(--green);color:var(--on-green);font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:400}
+.btn.time{background:transparent;color:var(--green-ink);border:1px solid var(--green);font-weight:700}
+.score{font-weight:700;margin-left:4px}
+
+/* audio */
+.play{flex:none;width:44px;height:44px;border-radius:50%;border:2px solid var(--green);background:var(--paper);color:var(--green-ink);cursor:pointer;display:grid;place-items:center;font-size:16px}
+.play.on{background:var(--green);color:var(--on-green)}
+.audio-row{display:flex;align-items:center;gap:12px;margin:0 0 8px}
+.audio-row .plays{font-size:13px;color:var(--muted)}
+.audio-note{display:none;background:var(--ko-bg);padding:10px 14px;border-radius:4px;font-size:15px;margin:8px 0}
+body.no-tts .audio-note{display:block}
+details{margin:8px 0}
+summary{cursor:pointer;color:var(--green-ink);font-weight:700}
+.script{background:var(--paper);border:1px dashed var(--line);padding:12px 16px;font-size:16px}
+.script p{margin:4px 0}
+
+/* grammar */
+.tense-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.tense-grid{grid-template-columns:1fr}}
+.tense{padding:18px;border-radius:4px}
+.tense.ps{background:var(--ps-bg)} .tense.pc{background:var(--pc-bg)} .tense.pp{background:var(--pp-bg)}
+.tense h3{font-size:22px}
+.tense.ps h3{color:var(--ps)} .tense.pc h3{color:var(--pc)} .tense.pp h3{color:var(--pp)}
+.tense .tag{margin:2px 0 10px;font-style:italic}
+.table-wrap{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700}
+.tense table td:first-child{color:var(--muted);white-space:nowrap}
+.uses{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.uses li b{display:block}
+.uses li span{display:block;font-style:italic}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:15px}
+.tense .chip{border-color:transparent}
+.paper{background:var(--paper);padding:14px 16px;box-shadow:var(--shadow);margin:10px 0}
+.v-ps{color:var(--ps);font-weight:700} .v-pc{color:var(--pc);font-weight:700} .v-pp{color:var(--pp);font-weight:700}
+.traps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.trap{background:var(--paper);padding:10px 12px;box-shadow:var(--shadow)}
+.trap s{color:var(--ko)} .trap b{color:var(--ok)}
+.order{display:grid;grid-template-columns:repeat(4,auto);gap:4px 8px;justify-content:start;font-size:16px}
+.order .h{font-size:13px;color:var(--muted)}
+.order .cell{background:var(--paper);padding:4px 10px;box-shadow:var(--shadow)}
+
+/* mistakes */
+.mist{display:flex;gap:12px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.mist .fix{display:none;color:var(--ok);font-weight:700}
+.mist.shown .fix{display:inline}
+.mist .why{display:none;font-size:15px;color:var(--muted);width:100%}
+.mist.shown .why{display:block}
+.mini{border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 12px;font-size:14px;cursor:pointer}
+
+/* make questions */
+.mq input{width:100%;border:1px solid var(--line);border-radius:4px;padding:7px 10px;background:var(--paper);margin-top:4px}
+.mq .model{display:none;color:var(--ok);font-weight:700;margin-top:4px}
+.models-on .mq .model{display:block}
+
+/* speaking & writing */
+.prompt{background:var(--paper);padding:16px 18px;box-shadow:var(--shadow)}
+.prompt ul{margin:6px 0 0;padding-left:22px}
+.email{background:var(--paper);padding:16px 18px;box-shadow:var(--shadow);font-size:16px}
+.email .hdr{margin-bottom:10px}
+.task{background:var(--paper);border:1px solid var(--line);padding:12px 16px;font-weight:700;margin-bottom:0}
+textarea{width:100%;min-height:260px;border:1px solid var(--line);border-radius:4px;padding:12px;background:var(--paper);line-height:1.6;resize:vertical}
+.wc{font-weight:700}
+.wc.low{color:var(--ko)} .wc.good{color:var(--ok)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:700px){.cols{grid-template-columns:1fr}}
+.checklist{list-style:none;padding:0;margin:6px 0}
+.checklist li{display:flex;gap:8px;align-items:flex-start;padding:3px 0}
+.checklist input{margin-top:6px;accent-color:var(--deep)}
+
+/* structure table */
+.struct th,.struct td{vertical-align:top}
+.struct td b{display:block}
+.struct td span{display:block;font-style:italic;color:var(--muted);margin-top:3px}
+.struct tr.r-ps th:first-child{color:var(--ps)} .struct tr.r-pc th:first-child{color:var(--pc)}
+.struct .k-ps{color:var(--ps)} .struct .k-pc{color:var(--pc)}
+/* prepositions */
+.preps{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.prep{background:var(--paper);box-shadow:var(--shadow);padding:8px 8px 10px;text-align:center}
+.prep svg{width:100%;height:auto;max-width:150px}
+.prep b{display:block;font-size:16px}
+.prep .bx{fill:var(--ps-bg);stroke:var(--ps);stroke-width:2.5}
+.prep .bl{fill:var(--pc)}
+.prep .ln{stroke:var(--muted);stroke-width:2;stroke-dasharray:4 4}
+.pic{margin:0 0 12px;background:var(--paper);box-shadow:var(--shadow);padding:8px}
+.pic svg{display:block;width:100%;height:auto}
+.part{margin:56px 0 0;padding:22px 20px;border-radius:4px;background:var(--deep);color:var(--paper)}
+.part h2{font-size:26px}
+.part p{margin:6px 0 0;opacity:.9}
+:root[data-theme="dark"] .part{color:#0D1A10}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .part{color:#0D1A10}}
+footer{color:var(--muted);font-size:14px;text-align:center;padding:30px 0 10px}
+
+@media print{
+  .top,.bar,.play,.tools{display:none!important}
+  body{background:#fff}
+  .q,.gaptext,.paper,.prompt,.email{box-shadow:none;border:1px solid #ccc}
+  section.block{break-inside:avoid-page}
+}
+
+.v-pc{color:var(--pc);font-weight:700}
+</style>
+
+<style>
+.tnote,#teacherBtn{display:none!important}
+.sprog{display:flex;align-items:center;gap:12px;margin:-4px 0 14px}
+.sprog-track,.tprog-track{flex:1;height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.sprog-fill,.tprog-fill{display:block;height:100%;width:0;background:var(--green);transition:width .3s}
+.sprog-txt{flex:none;font-size:14px;font-weight:700;color:var(--muted);min-width:9.5em;text-align:right;font-variant-numeric:tabular-nums}
+.sprog.full .sprog-txt{color:var(--green-ink)}
+.tprog{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:0 18px 10px}
+.tprog-track{height:8px}
+.tprog-txt{flex:none;font-size:13px;font-weight:700;color:var(--green-ink);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){.sprog-fill,.tprog-fill{transition:none}}
+</style>
+<style>.home-link{color:inherit;text-decoration:none;display:inline-flex;align-items:center}</style>
+</head>
+<body data-page="s56">
+<header class="top">
+  <div class="top-row">
+    <div class="badge" aria-hidden="true">360<br>LPT</div>
+    <div class="brand"><b>Inglés 360 LPT · Sessions 5–6</b><span>Past simple · comparatives · future forms · modals · polite requests</span></div>
+    <div class="tools">
+      <a class="tbtn home-link" href="index.html">← Inicio</a>
+      <button class="timer paused" id="timer" title="Click to pause or resume" aria-label="Timer. Click to pause or resume">
+        <div><strong id="tm">00</strong><small>Minutes</small></div>
+        <div><strong id="ts">00</strong><small>Seconds</small></div>
+      </button>
+      <button class="tbtn" id="teacherBtn" hidden>Notes</button>
+      <button class="tbtn hide-sm" id="themeBtn">Dark mode</button>
+    </div>
+  </div>
+  <nav class="steps" id="steps" aria-label="Sections">
+    <a href="#s5-review" data-step="s5-review">S5 · Review<span class="dot"></span></a>
+    <a href="#s5-listen" data-step="s5-listen">Listening<span class="dot"></span></a>
+    <a href="#s5-past" data-step="s5-past">Past simple<span class="dot"></span></a>
+    <a href="#s5-comp" data-step="s5-comp">Comparatives<span class="dot"></span></a>
+    <a href="#s5-gap" data-step="s5-gap">Gap Fill<span class="dot"></span></a>
+    <a href="#s5-ext" data-step="s5-ext">Extended Conv.<span class="dot"></span></a>
+    <a href="#s5-write" data-step="s5-write">Writing<span class="dot"></span></a>
+    <a href="#s6-review" data-step="s6-review">S6 · Review<span class="dot"></span></a>
+    <a href="#s6-listen" data-step="s6-listen">Listening<span class="dot"></span></a>
+    <a href="#s6-fut" data-step="s6-fut">Future<span class="dot"></span></a>
+    <a href="#s6-mod" data-step="s6-mod">Modals<span class="dot"></span></a>
+    <a href="#s6-talk" data-step="s6-talk">Short Talk<span class="dot"></span></a>
+    <a href="#s6-read" data-step="s6-read">Reading Aloud<span class="dot"></span></a>
+    <a href="#s6-write" data-step="s6-write">Writing<span class="dot"></span></a>
+  </nav>
+</header>
+<main>
+<div class="hero">
+  <h1>Comparing, choosing and making plans</h1>
+  <p class="lead">Session 5: the past simple and comparatives for customer service and the Extended Conversation. Session 6: future forms, modals and polite requests for the Reading Aloud and the e-mail.</p>
+  <div class="contrast">
+    <div class="s"><q>It's cheaper than the other one.</q><span>Session 5 · comparing two options, like in the exam.</span></div>
+    <div class="c"><q>Could you tell me what time it starts?</q><span>Session 6 · plans, rules and polite requests.</span></div>
+  </div>
+</div>
+
+<div class="part"><h2>Session 5</h2><p>Past simple · comparatives and superlatives · Extended Conversation · complaint reply</p></div>
+
+<section class="block" id="s5-review"><div class="sec-head"><h2>Review</h2><span class="kind">Find someone who…</span></div>
+  <p class="instr">Ask “Have you ever…?” or “Did you…?”. If the answer is yes, ask one more question in the past simple: “When did you…? Where did you…?”</p>
+  <div class="paper table-wrap"><table><tr><th>Find someone who…</th><th>Name</th><th>Extra information</th></tr><tr><td>…went to the cinema last month.</td><td></td><td></td></tr><tr><td>…has never worked at night.</td><td></td><td></td></tr><tr><td>…bought something online last week.</td><td></td><td></td></tr><tr><td>…has been to another country.</td><td></td><td></td></tr><tr><td>…started a new job or course this year.</td><td></td><td></td></tr></table></div>
+</section>
+
+<section class="block" id="s5-listen"><div class="sec-head"><h2>Listening</h2><span class="kind">Statement-Response · Short Conversation</span></div>
+  <div class="audio-note">Audio isn't available in this browser. Your teacher will read the recordings aloud.</div>
+  <h3 class="sub" style="margin-top:4px">Part 1 · Statement-Response</h3>
+  <p class="instr">Listen to the question and choose the best response.</p>
+  <div class="bar"><button class="btn time" data-time="3">Start 3-min timer</button><label class="small">Audio speed <select id="rate"><option value="0.92">Normal</option><option value="0.78">Slower</option></select></label></div>
+  <div data-ex="sr5"></div>
+  <h3 class="sub">Part 2 · Short Conversation</h3>
+  <p class="instr">Read the questions first (30 seconds). Then listen and choose the best answer.</p>
+  <div class="audio-row"><button class="play" data-audio="conv5" aria-label="Play audio" aria-pressed="false">▶</button><span class="plays" data-count="conv5">Not played yet</span></div>
+  <div data-ex="conv5"></div>
+  <details><summary>Transcript</summary><div class="script" data-script="conv5"></div></details>
+</section>
+
+<section class="block" id="s5-past"><div class="sec-head"><h2>Grammar</h2><span class="kind">Past simple · quick review</span></div>
+  <div class="paper table-wrap"><table><tr><th></th><th>Form</th><th>Remember</th></tr><tr><td><b>+</b></td><td>I <b>worked</b> · I <b>went</b></td><td>regular: -ed · irregular: learn them!</td></tr><tr><td><b>–</b></td><td>I <b>didn't work</b> · I <b>didn't go</b></td><td>didn't + base form</td></tr><tr><td><b>?</b></td><td><b>Did</b> you <b>work</b>? · Where <b>did</b> she <b>go</b>?</td><td>Did + subject + base form</td></tr><tr><td></td><td>Yes, I did. / No, she didn't.</td><td></td></tr></table></div>
+  <div class="cols">
+    <div class="paper"><b>-ed: three sounds</b><p style="margin:4px 0 0">/t/ worked, stopped, watched<br>/d/ called, arrived, played<br>/ɪd/ wanted, needed, started (after t / d)</p></div>
+    <div class="paper"><b>Time words</b><p style="margin:4px 0 0">yesterday · last week / month / year · two days ago · in 2020 · on Monday · when I was 18</p></div>
+  </div>
+  <h3 class="sub">Irregular verbs you need</h3>
+  <div class="chips"><span class="chip">buy → bought</span><span class="chip">go → went</span><span class="chip">have → had</span><span class="chip">make → made</span><span class="chip">send → sent</span><span class="chip">take → took</span><span class="chip">get → got</span><span class="chip">see → saw</span><span class="chip">come → came</span><span class="chip">say → said</span><span class="chip">tell → told</span><span class="chip">leave → left</span><span class="chip">meet → met</span><span class="chip">pay → paid</span><span class="chip">find → found</span><span class="chip">think → thought</span><span class="chip">write → wrote</span><span class="chip">speak → spoke</span></div>
+  <div class="traps">
+    <div class="trap"><s>I didn't went.</s><br><b>I didn't go.</b></div>
+    <div class="trap"><s>Did you called?</s><br><b>Did you call?</b></div>
+    <div class="trap"><s>I have seen him yesterday.</s><br><b>I saw him yesterday.</b></div>
+  </div>
+  <h3 class="sub">Incomplete Sentences</h3>
+  <p class="instr">Choose the word or phrase that best completes the sentence.</p>
+  <div class="bar"><button class="btn time" data-time="3">Start 3-min timer</button></div>
+  <div data-ex="inc5p"></div>
+</section>
+
+<section class="block" id="s5-comp"><div class="sec-head"><h2>Grammar</h2><span class="kind">Comparatives and superlatives</span></div>
+  <div class="paper table-wrap"><table><tr><th></th><th>Rule</th><th>Examples</th></tr><tr><td>Short (1 syllable)</td><td>cheap → cheap<b>er</b> → the cheap<b>est</b></td><td>big → bigger → the biggest</td></tr><tr><td>Ending in -e</td><td>nice → nice<b>r</b> → the nice<b>st</b></td><td>safe → safer → the safest</td></tr><tr><td>Ending in -y</td><td>easy → eas<b>ier</b> → the eas<b>iest</b></td><td>busy → busier → the busiest</td></tr><tr><td>Long (2+ syllables)</td><td><b>more</b> expensive → <b>the most</b> expensive</td><td>more comfortable, more modern</td></tr><tr><td>Irregular</td><td>good → <b>better</b> → <b>the best</b></td><td>bad → worse → the worst · far → further → the furthest</td></tr></table></div>
+  <div class="cols">
+    <div class="paper"><b>Comparing two things</b><p style="margin:4px 0 0">A is cheap<b>er than</b> B.<br>A is<b>n't as</b> expensive <b>as</b> B.<br>A is <b>as</b> fast <b>as</b> B.<br><b>much</b> faster · <b>a bit</b> more expensive</p></div>
+    <div class="paper"><b>The top of a group</b><p style="margin:4px 0 0">It's <b>the cheapest</b> hotel <b>in</b> the city.<br>It's <b>the best of</b> the three.<br>It's <b>the most popular</b> model we have.</p></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><s>more cheaper</s><br><b>cheaper</b></div>
+    <div class="trap"><s>the most fast</s><br><b>the fastest</b></div>
+    <div class="trap"><s>bigger that</s><br><b>bigger than</b></div>
+    <div class="trap"><s>more good</s><br><b>better</b></div>
+  </div>
+  <h3 class="sub">Incomplete Sentences</h3>
+  <p class="instr">Choose the word or phrase that best completes the sentence.</p>
+  <div class="bar"><button class="btn time" data-time="4">Start 4-min timer</button></div>
+  <div data-ex="inc5c"></div>
+</section>
+
+<section class="block" id="s5-gap"><div class="sec-head"><h2>Reading</h2><span class="kind">Gap Fill Text</span></div>
+  <p class="instr">Read the whole text first. Then choose the best option for each gap.</p>
+  <div class="bar"><button class="btn time" data-time="4">Start 4-min timer</button></div>
+  <div data-ex="gap5"></div>
+</section>
+
+<section class="block" id="s5-ext"><div class="sec-head"><h2>Speaking</h2><span class="kind">Extended Conversation</span></div>
+  <p class="task">Look at this information comparing two hotels for a work trip. Which one would you prefer? Give reasons for your answer. Then talk about the last time you stayed in a hotel. Where was it? What was it like? Did you enjoy it?</p>
+  <div class="cols" style="margin-top:12px">
+    <div class="paper"><b>The Central Plaza</b><p style="margin:4px 0 0">In the city centre, 5 minutes from the train station. Small but modern rooms. Free Wi-Fi. Breakfast: €12. Restaurant and bar open until midnight. €95 per night.</p></div>
+    <div class="paper"><b>The Green Park Hotel</b><p style="margin:4px 0 0">20 minutes by bus from the centre. Big, quiet rooms with a view of the park. Free breakfast and parking. Gym and swimming pool. €80 per night.</p></div>
+  </div>
+  <div class="cols">
+    <div class="paper"><b>How to answer</b><ol style="margin:6px 0 0;padding-left:22px"><li>Say which one you prefer.</li><li>Give two or three reasons with comparatives.</li><li>Say one good thing about the other option.</li><li>Answer the personal questions (past simple).</li></ol></div>
+    <div class="paper"><b>Useful language</b><p style="margin:4px 0 0">I'd prefer… because…<br>X is cheaper / bigger / quieter than Y.<br>X isn't as … as Y.<br>The best thing about X is…<br>On the other hand, …<br>For a work trip, I think … is better because…</p></div>
+  </div>
+  <div class="bar"><button class="btn time" data-time="1">Start 1-min timer</button></div>
+  <details><summary>Model answer</summary><div class="email"><p>I'd prefer the Green Park Hotel. It's <span class="v-pc">cheaper than</span> the Central Plaza, and breakfast is free, so it's <span class="v-pc">much better value</span>. The rooms are <span class="v-pc">bigger and quieter</span>, and I think that's important on a work trip because you need to sleep well. The Central Plaza is <span class="v-pc">more convenient</span>, because it's <span class="v-pc">closer to</span> the station, but the rooms are <span class="v-pc">smaller</span> and breakfast is <span class="v-pc">more expensive</span>. The last time I <span class="v-pp">stayed</span> in a hotel <span class="v-pp">was in August</span>. I <span class="v-pp">went</span> to Valencia with my family. The hotel <span class="v-pp">was near</span> the beach and the room <span class="v-pp">was very comfortable</span>. We <span class="v-pp">had breakfast</span> on the terrace every morning and I really <span class="v-pp">enjoyed</span> it.</p><p class="small"><span class="v-pc">■</span> comparatives · <span class="v-pp">■</span> past simple</p></div></details>
+</section>
+
+<section class="block" id="s5-write"><div class="sec-head"><h2>Writing</h2><span class="kind">E-mail reply · complaint</span></div>
+  
+  <p class="task">Read the following e-mail and write a reply as if you are Sam Ortiz, the manager of the Seaview Hotel. Make sure you provide all the information that Emma Clarke requests. (Min. 120 words — in the exam: 150)</p>
+  <div class="email"><div class="hdr"><b>To:</b> Sam Ortiz &lt;manager@seaviewhotel.com&gt;<br><b>From:</b> Emma Clarke &lt;emma.clarke@hmail.com&gt;<br><b>Subject:</b> My stay last weekend</div><p>Dear Mr Ortiz,</p><p>I stayed at your hotel last weekend (Room 214). Unfortunately, the room was much smaller than in the photos on your website, and it was very noisy because it was next to the lift. Also, the breakfast was cold on both days.</p><p>Could you explain why the room was different from the photos? I would also like to know if you can give me a partial refund. Finally, I'm planning to come back in December with my husband: do you have any quieter rooms?</p><p>I look forward to hearing from you.</p><p>Emma Clarke</p></div>
+  <div class="cols" style="margin-top:14px">
+    <div class="paper"><b>Before you write: what do you have to answer?</b>
+      <ul class="checklist"><li><input type="checkbox" id="w5c0"><label for="w5c0">Why was the room different from the photos?</label></li><li><input type="checkbox" id="w5c1"><label for="w5c1">Can you give her a partial refund?</label></li><li><input type="checkbox" id="w5c2"><label for="w5c2">Are there quieter rooms for December?</label></li></ul>
+      <b>Plan: 5 short paragraphs</b>
+      <ol style="margin:6px 0 0;padding-left:22px"><li>Thank her and apologise.</li><li>Explain what happened (past simple).</li><li>Answer about the refund.</li><li>Recommend a better room (comparatives).</li><li>Close politely.</li></ol></div>
+    <div class="paper"><b>Useful language</b><p style="margin:4px 0">Thank you for your email about your stay…<br>I'm very sorry that…<br>I <span class="v-pp">checked</span> your booking and…<br>The photos show our superior rooms, which are <span class="v-pc">bigger than</span>…<br>As an apology, we are happy to…<br>Our rooms on the fifth floor are <span class="v-pc">quieter and bigger</span>…<br>We look forward to welcoming you again.</p></div>
+  </div>
+  <h3 class="sub">Your answer</h3>
+  <div class="bar"><button class="btn time" data-time="20">Start 20-min timer (exam time)</button><span>Words: <span class="wc low" data-wc-for="w5" data-target="120">0</span> / 120</span></div>
+  <label for="w5-ta" class="small">Write here (nothing is saved — copy your text before closing).</label>
+  <textarea id="w5-ta" data-wc="w5" spellcheck="false" placeholder="Dear Ms Clarke,"></textarea>
+  <details><summary>Model answer</summary><div class="email"><p>Dear Ms Clarke,</p><p>Thank you for your email, and I am very sorry that you <span class="v-pp">did not enjoy</span> your stay last weekend.</p><p>I <span class="v-pp">checked</span> your booking and you are right. The photos on our website show our superior rooms, which are <span class="v-pc">bigger than</span> the standard room you <span class="v-pp">stayed</span> in. We are changing the photos this week so that our guests can see all the rooms. I also <span class="v-pp">spoke</span> to our kitchen staff about the breakfast, and it will not happen again.</p><p>As an apology, we are happy to give you a 30% refund. You will receive it in the next five days.</p><p>For your visit in December, I recommend our rooms on the fifth floor. They are <span class="v-pc">quieter and bigger than</span> Room 214, and they have a sea view. I would be happy to book one for you at a special price.</p><p>Kind regards,<br>Sam Ortiz<br>Manager, Seaview Hotel</p><p class="small"><span class="v-pp">■</span> past simple · <span class="v-pc">■</span> comparatives</p></div></details>
+  <h3 class="sub">Peer check</h3>
+  <div class="paper"><ul class="checklist"><li><input type="checkbox" id="w5p0"><label for="w5p0">It answers the three questions (photos, refund, quieter rooms).</label></li><li><input type="checkbox" id="w5p1"><label for="w5p1">It apologises and uses the past simple to explain what happened.</label></li><li><input type="checkbox" id="w5p2"><label for="w5p2">It uses at least two comparatives (bigger than, quieter…).</label></li><li><input type="checkbox" id="w5p3"><label for="w5p3">It has a correct greeting and closing.</label></li><li><input type="checkbox" id="w5p4"><label for="w5p4">It has at least 120 words.</label></li></ul></div>
+</section>
+
+<section class="block" id="s5-home"><div class="sec-head"><h2>Homework</h2><span class="kind">Session 5</span></div>
+  <div class="prompt"><ul>
+    <li><b>Writing:</b> finish the reply to Emma Clarke in 20 minutes (120+ words).</li>
+    <li><b>Speaking:</b> record yourself for 1 minute: which gym would you prefer, and why? Then talk about the last time you did some sport.</li>
+  </ul></div>
+  <div class="cols" style="margin-top:12px">
+    <div class="paper"><b>FitZone</b><p style="margin:4px 0 0">Open 24 hours. €35 a month. Big, but very busy in the evenings. No classes.</p></div>
+    <div class="paper"><b>Active Club</b><p style="margin:4px 0 0">Open 7:00–22:00. €45 a month. Smaller and quiet. Free classes and a personal trainer.</p></div>
+  </div>
+</section>
+
+<div class="part"><h2>Session 6</h2><p>Future forms · modals · polite requests · Reading Aloud · e-mail reply</p></div>
+
+<section class="block" id="s6-review"><div class="sec-head"><h2>Review</h2><span class="kind">Spot the mistake</span></div>
+  <p class="instr">Each sentence has one mistake. Find it, then check.</p>
+  <div data-mist="mist6"></div>
+  <div class="bar"><button class="btn ghost" data-mist-all="mist6">Show all corrections</button></div>
+</section>
+
+<section class="block" id="s6-listen"><div class="sec-head"><h2>Listening</h2><span class="kind">Statement-Response</span></div>
+  <div class="audio-note">Audio isn't available in this browser. Your teacher will read the recordings aloud.</div>
+  <p class="instr">Listen to the question or statement and choose the best response.</p>
+  <div class="bar"><button class="btn time" data-time="4">Start 4-min timer</button></div>
+  <div data-ex="sr6"></div>
+</section>
+
+<section class="block" id="s6-fut"><div class="sec-head"><h2>Grammar</h2><span class="kind">Talking about the future</span></div>
+  <div class="paper table-wrap"><table><tr><th>Form</th><th>Use</th></tr><tr><td><b>will</b><br><span class="small">will + verb · won't + verb</span></td><td><b>Decision now, offer, promise</b><br><i>It's cold. I'll close the window.</i><br><b>Prediction (opinion)</b><br><i>I think it'll be a good day.</i></td></tr><tr><td><b>going to</b><br><span class="small">am / is / are going to + verb</span></td><td><b>Plan or intention (decided before)</b><br><i>We're going to open a new office.</i><br><b>Prediction with evidence</b><br><i>Look at those clouds! It's going to rain.</i></td></tr><tr><td><b>present continuous</b><br><span class="small">am / is / are + verb-ing</span></td><td><b>Fixed arrangement (date, people)</b><br><i>I'm meeting the client on Friday.</i></td></tr><tr><td><b>present simple</b><br><span class="small">verb (+ -s)</span></td><td><b>Timetables</b><br><i>The training starts at nine.</i></td></tr></table></div>
+  <p><b>Quick test:</b> did you decide <i>now</i>? → <b>will</b>. Did you decide <i>before</i>? → <b>going to</b>. Is it in your diary with a time? → <b>present continuous</b>. Is it a timetable? → <b>present simple</b>.</p>
+  <h3 class="sub">Incomplete Sentences</h3>
+  <p class="instr">Choose the word or phrase that best completes the sentence.</p>
+  <div class="bar"><button class="btn time" data-time="4">Start 4-min timer</button></div>
+  <div data-ex="inc6f"></div>
+</section>
+
+<section class="block" id="s6-mod"><div class="sec-head"><h2>Grammar</h2><span class="kind">Modals · polite requests</span></div>
+  <div class="paper table-wrap"><table><tr><th>Modal</th><th>Use</th><th>Example</th></tr><tr><td><b>can / can't</b></td><td>ability, permission</td><td><i>Can I use your phone? You can't park here.</i></td></tr><tr><td><b>must / mustn't</b></td><td>strong obligation, rules / it's forbidden</td><td><i>You must sign in at reception. You mustn't smoke.</i></td></tr><tr><td><b>have to / don't have to</b></td><td>obligation / it isn't necessary</td><td><i>I have to wear a uniform. You don't have to bring a laptop.</i></td></tr><tr><td><b>should / shouldn't</b></td><td>advice</td><td><i>You should tell me before Tuesday.</i></td></tr></table></div>
+  <div class="cols">
+    <div class="paper"><b>mustn't ≠ don't have to</b><p style="margin:4px 0 0">You <b>mustn't</b> use the lifts. → it's forbidden<br>You <b>don't have to</b> bring a laptop. → it isn't necessary</p></div>
+    <div class="paper"><b>Form</b><p style="margin:4px 0 0">modal + base form: She <b>must go</b>. <s>She musts go / must to go</s><br>have to changes: she <b>has to</b> · <b>Do</b> I <b>have to</b>…?</p></div>
+  </div>
+  <h3 class="sub">Polite requests</h3>
+  <div class="paper table-wrap"><table><tr><th>Request</th><th>When</th></tr><tr><td><b>Can you…?</b></td><td>informal</td></tr><tr><td><b>Could you…?</b></td><td>polite</td></tr><tr><td><b>Would you mind + -ing?</b></td><td>very polite</td></tr><tr><td><b>Do you mind if I…?</b></td><td>asking for permission</td></tr></table></div>
+  <p><b>Answers:</b> Sure. / Of course. / No problem. · No, not at all. (to “Do you mind…?” = yes, you can) · I'm afraid I can't…</p>
+  <h3 class="sub">Incomplete Sentences</h3>
+  <p class="instr">Choose the word or phrase that best completes the sentence.</p>
+  <div class="bar"><button class="btn time" data-time="4">Start 4-min timer</button></div>
+  <div data-ex="inc6m"></div>
+  <h3 class="sub">Gap Fill Text</h3>
+  <p class="instr">Read the whole text first. Then choose the best option for each gap.</p>
+  <div data-ex="gap6"></div>
+</section>
+
+<section class="block" id="s6-talk"><div class="sec-head"><h2>Listening</h2><span class="kind">Short Talk</span></div>
+  <div class="audio-note">Audio isn't available in this browser. Your teacher will read the recordings aloud.</div>
+  <p class="instr">Read the questions first (30 seconds). Then listen and choose the best answer.</p>
+  <div class="audio-row"><button class="play" data-audio="talk6" aria-label="Play audio" aria-pressed="false">▶</button><span class="plays" data-count="talk6">Not played yet</span></div>
+  <div data-ex="talk6"></div>
+  <details><summary>Transcript</summary><div class="script" data-script="talk6"></div></details>
+</section>
+
+<section class="block" id="s6-read"><div class="sec-head"><h2>Speaking</h2><span class="kind">Reading Aloud</span></div>
+  <p class="instr">Read the text aloud. You have 30 seconds to prepare.</p>
+  <div class="email"><p>Good afternoon, everyone, and thank you for coming. As you know, next month our company is going to move to a new building on Mayor Street. The new offices are bigger and brighter than the old ones, and there will be a free car park for all employees. The move will take place on the weekend of the 14th and 15th of November. On Friday the 13th, you must put all your documents in the boxes we are going to give you. You don't have to move your computers: our IT team will do that. If you have any questions, please speak to your manager or send an email to Human Resources. We hope you will enjoy your new workplace.</p></div>
+  <div class="bar"><button class="btn time" data-time="1">Start 1-min timer</button></div>
+  <h3 class="sub">How to read aloud well</h3>
+  <div class="traps"><div class="trap"><b>Read it silently first</b><br>You have time to prepare. Read the whole text once before you speak.</div><div class="trap"><b>Pause at . and ,</b><br>Mark short pauses with / . Don't read word by word.</div><div class="trap"><b>Numbers and dates</b><br>the 14th → “the fourteenth” · Friday the 13th → “Friday the thirteenth”.</div><div class="trap"><b>Natural speed</b><br>Not too fast. If you make a mistake, don't stop: correct it and continue.</div></div>
+  <details><summary>Text with pauses marked</summary><div class="email"><p>Good afternoon, <b>/</b> everyone, <b>/</b> and thank you for coming. <b>//</b> As you know, <b>/</b> next month our company is going to move to a new building on Mayor Street. <b>//</b> The new offices are bigger and brighter than the old ones, <b>/</b> and there will be a free car park for all employees. <b>//</b> The move will take place on the weekend of the 14th and 15th of November. <b>//</b> On Friday the 13th, <b>/</b> you must put all your documents in the boxes we are going to give you. <b>//</b> You don't have to move your computers: <b>/</b> our IT team will do that. <b>//</b> If you have any questions, <b>/</b> please speak to your manager or send an email to Human Resources. <b>//</b> We hope you will enjoy your new workplace.</p></div></details>
+  <h3 class="sub">Listen to a model</h3>
+  <div class="audio-row"><button class="play" data-audio="read6" aria-label="Play audio" aria-pressed="false">▶</button><span class="plays" data-count="read6">Not played yet</span></div>
+</section>
+
+<section class="block" id="s6-write"><div class="sec-head"><h2>Writing</h2><span class="kind">E-mail reply · answering questions</span></div>
+  
+  <p class="task">Read the following e-mail and write a reply as if you are Alex Romero, a new employee at Brightway. Make sure you provide all the information that Laura asks for. (Min. 120 words — in the exam: 150)</p>
+  <div class="email"><div class="hdr"><b>To:</b> Alex Romero &lt;a.romero@brightway.com&gt;<br><b>From:</b> Laura Pérez &lt;l.perez@brightway.com&gt;<br><b>Subject:</b> Your first day at Brightway</div><p>Dear Alex,</p><p>Welcome to Brightway! Your first day will be next Monday. The induction starts at 9:00 in Room 3, and lunch is included.</p><p>Before Monday, could you tell me what time you are going to arrive and how you are going to travel to the office? I also need to know if you will need a parking space and if you have any food allergies for lunch.</p><p>If you have any questions about your first day, please ask me.</p><p>Best regards,<br>Laura</p></div>
+  <div class="cols" style="margin-top:14px">
+    <div class="paper"><b>Before you write: what do you have to answer?</b>
+      <ul class="checklist"><li><input type="checkbox" id="w6c0"><label for="w6c0">What time are you going to arrive?</label></li><li><input type="checkbox" id="w6c1"><label for="w6c1">How are you going to travel?</label></li><li><input type="checkbox" id="w6c2"><label for="w6c2">Will you need a parking space?</label></li><li><input type="checkbox" id="w6c3"><label for="w6c3">Do you have any food allergies?</label></li><li><input type="checkbox" id="w6c4"><label for="w6c4">Ask two polite questions of your own.</label></li></ul>
+      <b>Plan: 5 short paragraphs</b>
+      <ol style="margin:6px 0 0;padding-left:22px"><li>Thank her for the welcome.</li><li>Arrival time and transport (going to).</li><li>Parking and lunch (will / won't).</li><li>Two polite questions (Could you…? Do I have to…?).</li><li>Close politely.</li></ol></div>
+    <div class="paper"><b>Useful language</b><p style="margin:4px 0">Thank you for your email and the warm welcome.<br>I'm <span class="v-pc">going to arrive</span> at about…<br>I'm <span class="v-pc">going to come</span> by car / train…<br>I <span class="v-pc">will</span> / <span class="v-pc">won't</span> need a parking space.<br>I don't have any food allergies, but…<br>Could you tell me if I <span class="v-pp">have to</span> bring…?<br>Is it possible to…?<br>I'm really looking forward to starting.</p></div>
+  </div>
+  <h3 class="sub">Your answer</h3>
+  <div class="bar"><button class="btn time" data-time="20">Start 20-min timer (exam time)</button><span>Words: <span class="wc low" data-wc-for="w6" data-target="120">0</span> / 120</span></div>
+  <label for="w6-ta" class="small">Write here (nothing is saved — copy your text before closing).</label>
+  <textarea id="w6-ta" data-wc="w6" spellcheck="false" placeholder="Dear Laura,"></textarea>
+  <details><summary>Model answer</summary><div class="email"><p>Dear Laura,</p><p>Thank you for your email and for the warm welcome. I'm really looking forward to starting at Brightway.</p><p>On Monday <span class="v-pc">I'm going to arrive</span> at about 8:45, so <span class="v-pc">I'll have</span> time to find Room 3. <span class="v-pc">I'm going to come</span> by car, because there isn't a direct bus from my town, so <span class="v-pc">I will need</span> a parking space, please.</p><p>I don't have any food allergies, but I don't eat meat. <span class="v-pp">Is it possible</span> to have a vegetarian option for lunch?</p><p>I also have two questions. <span class="v-pp">Do I have to</span> bring any documents on the first day, for example my ID card? And <span class="v-pp">could you tell me</span> what time the induction finishes? <span class="v-pp">I have to pick up</span> my son from school at five.</p><p>Thank you again. See you on Monday.</p><p>Best regards,<br>Alex Romero</p><p class="small"><span class="v-pc">■</span> future · <span class="v-pp">■</span> modals and polite questions</p></div></details>
+  <h3 class="sub">Peer check</h3>
+  <div class="paper"><ul class="checklist"><li><input type="checkbox" id="w6p0"><label for="w6p0">It answers the four questions (time, transport, parking, allergies).</label></li><li><input type="checkbox" id="w6p1"><label for="w6p1">It asks two polite questions (Could you…? / Do I have to…?).</label></li><li><input type="checkbox" id="w6p2"><label for="w6p2">It uses going to for plans and will for decisions.</label></li><li><input type="checkbox" id="w6p3"><label for="w6p3">It has a correct greeting and closing.</label></li><li><input type="checkbox" id="w6p4"><label for="w6p4">It has at least 120 words.</label></li></ul></div>
+</section>
+
+<section class="block" id="s6-home"><div class="sec-head"><h2>Homework</h2><span class="kind">Session 6</span></div>
+  <div class="prompt"><ul>
+    <li><b>Writing:</b> finish the reply to Laura in 20 minutes (120+ words).</li>
+    <li><b>Speaking · Reading Aloud:</b> record yourself reading the text above. Listen to the model and record it again.</li>
+    <li><b>Speaking · Warm Up:</b> record yourself for 1 minute: What are you going to do this weekend? What are you doing next week? Do you have any appointments? What will you do when you finish this course?</li>
+  </ul></div>
+</section>
+<footer>Inglés 360 LPT · CAPMAN · Material de práctica con formato del examen 360 LPT · Sesiones 5 y 6</footer>
+</main>
+<script>
+(function(){
+"use strict";
+var EX = {"sr5":{"type":"sr","items":[{"say":"Which hotel did you choose for the conference?","opts":["The conference was very interesting.","I choose it every year.","The cheaper one, near the station."],"a":2,"why":"“Which” asks for a choice. B uses the wrong tense; A talks about the conference, not the hotel."},{"say":"How was your trip to Madrid?","opts":["By train.","Great, but it was busier than I expected.","I'm going next week."],"a":1,"why":"“How was…?” asks for an opinion about the past. A answers “how did you go?”."},{"say":"Is the new printer better than the old one?","opts":["Yes, it's much faster.","It's next to the door.","Yes, it's the most fast."],"a":0,"why":"Comparative: faster (never “most fast”). B answers “where”."},{"say":"Did you call the customer back?","opts":["Yes, I call her every day.","She's our best customer.","Yes, I called her this morning."],"a":2,"why":"Did…? → past simple answer with a finished time. B repeats “customer” — a trap."}]},"conv5":{"type":"mc","items":[{"q":"When did the customer buy the coffee machine?","opts":["Three years ago","Last week","On Friday","Yesterday"],"a":1,"why":"“I bought a coffee machine… last week.”"},{"q":"What happened yesterday?","opts":["The machine made coffee very quickly.","The machine stopped working.","The machine arrived.","The customer called the shop."],"a":1,"why":"“…it stopped working yesterday.”"},{"q":"Why is the Barista 300 better?","opts":["It arrives on Friday.","It is faster, quieter and has a longer guarantee.","It is cheaper and smaller.","It is the newest model."],"a":1,"why":"“…it's faster and quieter… a longer guarantee.”"},{"q":"What does the customer decide?","opts":["To call again on Friday","To get the money back","To buy the Barista 300","To get a new Barista 200"],"a":3,"why":"“I think I'll just take a new Barista 200.”"}]},"inc5p":{"type":"select","items":[{"t":"We ___ the new software last Monday.","opts":["installing","have installed","install","installed"],"a":3,"why":"Finished time (last Monday) → past simple."},{"t":"I ___ your email because I was on holiday.","opts":["didn't saw","didn't see","not saw","haven't see"],"a":1,"why":"didn't + base form → didn't see."},{"t":"___ you pay for the order by card?","opts":["Were","Have","Was","Did"],"a":3,"why":"Past simple question → Did + subject + base form."},{"t":"The delivery ___ two hours late yesterday.","opts":["arrives","arrived","arriving","has arrived"],"a":1,"why":"Yesterday → past simple."},{"t":"She ___ to London three times last year.","opts":["go","has gone","went","goes"],"a":2,"why":"Last year (finished) → went."},{"t":"When ___ the customer call? — About ten minutes ago.","opts":["has","was","does","did"],"a":3,"why":"ago → past simple → When did… call?"}]},"inc5c":{"type":"select","items":[{"t":"The new office is ___ than the old one.","opts":["biggest","more big","big","bigger"],"a":3,"why":"Short adjective + than → bigger (double g)."},{"t":"This is the ___ hotel in the city.","opts":["expensivest","expensive","more expensive","most expensive"],"a":3,"why":"Long adjective + the … in → the most expensive."},{"t":"Online orders are usually ___ than orders by phone.","opts":["more fast","faster","fast","fastest"],"a":1,"why":"Short adjective + than → faster."},{"t":"Our customer service is ___ than last year.","opts":["more good","better","good","best"],"a":1,"why":"Irregular: good → better → the best."},{"t":"The train is not as quick ___ the plane.","opts":["like","that","as","than"],"a":2,"why":"not as … as."},{"t":"Monday is the ___ day of the week in the shop.","opts":["busier","busiest","busy","most busy"],"a":1,"why":"-y → -iest: the busiest."},{"t":"This model is a bit ___ expensive, but it's quieter.","opts":["more","the","most","very"],"a":0,"why":"a bit + comparative → a bit more expensive."},{"t":"That was the ___ meal I've ever had!","opts":["baddest","worst","worse","most bad"],"a":1,"why":"Irregular: bad → worse → the worst."}]},"gap5":{"type":"gap","texts":[{"html":"<p class='qtitle'>Advertisement</p><p><b>NetPlus – fast internet for your business</b></p><p>Are you tired of slow internet? At NetPlus we offer the [[0]] connection in the city. Our new plan is even [[1]] than last year's, and it's [[2]] than ever to change: just call us! Last month, more than 2,000 customers [[3]] NetPlus. We are [[4]] company in Elche with 24-hour support. Join us today and get a free router!</p>","gaps":[{"opts":["fast","most fast","fastest","faster"],"a":2,"why":"the … in the city → superlative: the fastest."},{"opts":["more cheap","cheaper","cheap","cheapest"],"a":1,"why":"than → comparative: cheaper."},{"opts":["easiest","more easy","easy","easier"],"a":3,"why":"than ever → comparative; easy → easier."},{"opts":["choose","chose","choosing","have chose"],"a":1,"why":"Last month → past simple: chose."},{"opts":["an only","the one","the only","only"],"a":2,"why":"We are the only company… (this item comes from the official exam)."}]}]},"sr6":{"type":"sr","items":[{"say":"Could you send me the report before Friday?","opts":["The report is very long.","Yes, I could send.","Sure, I'll send it tomorrow."],"a":2,"why":"A request → Sure, I'll… (will for promises and offers)."},{"say":"Do you mind if I open the window?","opts":["Yes, please open it.","It's next to the door.","No, not at all. Go ahead."],"a":2,"why":"“Do you mind…?” = ¿te importa? “No, not at all” means YES, you can. “Yes” would mean it's a problem — a trap!"},{"say":"What are you doing this weekend?","opts":["I visit my parents.","I visited my parents last weekend.","I'm visiting my parents in Alicante."],"a":2,"why":"Arrangements → present continuous. B talks about the past."},{"say":"Do we have to wear a uniform at the training day?","opts":["No, you don't have to. Normal clothes are fine.","Yes, it's a nice uniform.","No, you mustn't."],"a":0,"why":"don't have to = it isn't necessary. mustn't = it's forbidden."},{"say":"It's very cold in here.","opts":["The window is closed every day.","I'll close the window.","I'm going to close the window yesterday."],"a":1,"why":"A decision at the moment of speaking → will."},{"say":"Should I bring my laptop to the meeting?","opts":["Yes, you should. We're going to look at the new website.","It's a new laptop.","Yes, I should."],"a":0,"why":"Should I…? → Yes, you should. B repeats “laptop”."}]},"inc6f":{"type":"select","items":[{"t":"“The phone is ringing.” — “OK, I ___ it.”","opts":["'ll answer","'m answer","answered","answer"],"a":0,"why":"Decision at the moment of speaking → will."},{"t":"We ___ a new office in Valencia next year; the plan is ready.","opts":["are going to open","opening","will to open","opened"],"a":0,"why":"A plan decided before → going to."},{"t":"I ___ the dentist at 4 p.m. tomorrow — it's in my diary.","opts":["'m seeing","saw","'m see","see"],"a":0,"why":"Fixed arrangement → present continuous."},{"t":"The train to Madrid ___ at 7:15 every morning.","opts":["left","will leaving","is leaving","leaves"],"a":3,"why":"Timetable → present simple."},{"t":"Don't worry, I ___ tell anyone.","opts":["don't","not will","am not","won't"],"a":3,"why":"Promise → won't (will not)."},{"t":"Look at the sky! It ___ rain.","opts":["rains","is going to","will to","is raining to"],"a":1,"why":"Prediction with evidence → going to."},{"t":"I think the new manager ___ a good job.","opts":["does to","do","is doing to","will do"],"a":3,"why":"I think + prediction → will."},{"t":"What time ___ the meeting start tomorrow?","opts":["does","will to","is","has"],"a":0,"why":"Timetable/schedule → present simple: What time does… start?"}]},"inc6m":{"type":"select","items":[{"t":"Visitors ___ sign in at reception when they arrive.","opts":["don't have to","should to","must","mustn't"],"a":2,"why":"A rule → must."},{"t":"You ___ smoke in the building. It's forbidden.","opts":["don't have to","can","must","mustn't"],"a":3,"why":"Forbidden → mustn't."},{"t":"It's a casual day, so you ___ wear a suit.","opts":["mustn't","can't to","don't have to","must"],"a":2,"why":"Not necessary → don't have to."},{"t":"You look tired. You ___ go home early.","opts":["should","mustn't","have","must to"],"a":0,"why":"Advice → should + base form."},{"t":"___ you tell me where the meeting room is?","opts":["Do","Should","Must","Could"],"a":3,"why":"Polite request → Could you…?"},{"t":"Would you mind ___ the door, please?","opts":["to close","closing","closed","close"],"a":1,"why":"Would you mind + -ing."},{"t":"She ___ work on Saturdays because the shop is open.","opts":["has to","must to","has","have to"],"a":0,"why":"she → has to (+ base form)."},{"t":"Do you mind if I ___ your pen?","opts":["uses","using","use","to use"],"a":2,"why":"Do you mind if I + base form."}]},"gap6":{"type":"gap","texts":[{"html":"<p class='qtitle'>Memo</p><p><b>To:</b> All staff</p><p><b>From:</b> Laura Pérez, HR Manager</p><p><b>Subject:</b> Fire drill next week</p><p>Dear colleagues,</p><p>Next Wednesday at 11 a.m. we [[0]] a fire drill. When you hear the alarm, you [[1]] leave the building immediately, and you [[2]] use the lifts. You [[3]] take your bags or coats, because the drill [[4]] only ten minutes. [[5]] you please tell your visitors about it too?</p><p>Thank you,</p><p>Laura</p>","gaps":[{"opts":["had","have had","are going to have","will having"],"a":2,"why":"A plan for next Wednesday → going to."},{"opts":["mustn't","should to","don't have to","must"],"a":3,"why":"A rule → must."},{"opts":["must","can","mustn't","don't have to"],"a":2,"why":"Forbidden → mustn't."},{"opts":["have","must","don't have to","mustn't"],"a":2,"why":"Not necessary → don't have to."},{"opts":["took","taking","is take","will take"],"a":3,"why":"Future → will + base form."},{"opts":["Should","Could","Must","Do"],"a":1,"why":"Polite request → Could you…?"}]}]},"talk6":{"type":"mc","items":[{"q":"Where is the training day?","opts":["At the train station","In the car park","In the HR office","In the conference room on the third floor"],"a":3,"why":"“…in the conference room on the third floor.”"},{"q":"What time must employees arrive?","opts":["At nine o'clock","At ten to nine","At ten past nine","Before Tuesday"],"a":1,"why":"“…you must be there by ten to nine.”"},{"q":"Why don't employees have to bring a laptop?","opts":["Because the room has computers","Because laptops are not allowed","Because they will get a tablet","Because the training is online"],"a":2,"why":"“…we're going to give everyone a tablet.”"},{"q":"Why is it a good idea to come by bus or train?","opts":["Because the car park will be closed","Because it's faster","Because the training starts early","Because it's cheaper"],"a":0,"why":"“…the car park will be closed that day.”"}]}};
+var AUDIO = {"conv5":[{"w":"A","t":"Good morning, TechHome customer service. Sarah speaking. How can I help you?"},{"w":"B","t":"Hello. I bought a coffee machine from your website last week, the Barista 200, but it stopped working yesterday."},{"w":"A","t":"I'm sorry to hear that. Did you receive it in good condition?"},{"w":"B","t":"Yes, it arrived on Tuesday and it worked perfectly for three days. Then yesterday it made a strange noise and stopped."},{"w":"A","t":"I see. We can send you a new one, or you can change it for a different model. The Barista 300 is a bit more expensive, but it's faster and quieter."},{"w":"B","t":"How much more expensive is it?"},{"w":"A","t":"It's thirty euros more. But it's our most popular model, and it has a longer guarantee: three years instead of two."},{"w":"B","t":"Hmm. I think I'll just take a new Barista 200, please. It's cheaper, and I liked it."},{"w":"A","t":"No problem. It will arrive on Friday. I'm sending you an email with the details now."}],"talk6":[{"w":"A","t":"Hello everyone, this is Laura from Human Resources with some information about next week's training day. The training will take place on Thursday in the conference room on the third floor. It starts at nine o'clock, so you must be there by ten to nine to sign in. You don't have to bring a laptop, because we're going to give everyone a tablet for the day. Lunch is included, but if you have any food allergies, you should tell me before Tuesday. Finally, the car park will be closed that day because they're painting it, so it'll be a good idea to come by bus or train. If you have any questions, could you send me an email? Thank you."}],"read6":[{"w":"A","t":"Good afternoon, everyone, and thank you for coming. As you know, next month our company is going to move to a new building on Mayor Street. The new offices are bigger and brighter than the old ones, and there will be a free car park for all employees. The move will take place on the weekend of the fourteenth and fifteenth of November. On Friday the thirteenth, you must put all your documents in the boxes we are going to give you. You don't have to move your computers: our IT team will do that. If you have any questions, please speak to your manager or send an email to Human Resources. We hope you will enjoy your new workplace."}]};
+var NAMES = {"conv5":{"A":"Sarah","B":"Customer"},"talk6":{"A":"Laura"},"read6":{"A":"Speaker"}};
+var MIST = {"mist6":[{"t":"This hotel is more cheaper than the other one.","fix":"This hotel is cheaper than the other one.","why":"short adjective → -er, without more"},{"t":"It's the most fast train.","fix":"It's the fastest train.","why":"short adjective → the -est"},{"t":"I didn't went to the meeting.","fix":"I didn't go to the meeting.","why":"didn't + base form"},{"t":"My car is bigger that yours.","fix":"My car is bigger than yours.","why":"comparative + than"},{"t":"Did you called the client?","fix":"Did you call the client?","why":"Did + base form"},{"t":"This is the better restaurant in town.","fix":"This is the best restaurant in town.","why":"the … in town → superlative"}]};
+var USES = [];
+/* ===================== HELPERS ===================== */
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function sel(k,opts){
+  var h='<select data-k="'+k+'" aria-label="Choose an option"><option value="">-----</option>';
+  opts.forEach(function(o,i){h+='<option value="'+i+'">'+o+'</option>'});
+  return h+'</select>';
+}
+function radios(k,opts){
+  var h='<div class="opts" role="radiogroup">';
+  opts.forEach(function(o,i){h+='<label class="opt" data-o="'+i+'"><input type="radio" name="'+k+'" value="'+i+'"><span>'+o+'</span></label>'});
+  return h+'</div>';
+}
+function card(n,inner,k){return '<div class="q" id="q-'+k+'"><span class="qn">'+n+'</span>'+inner+'<div class="fb" id="fb-'+k+'"></div></div>'}
+
+var STATE = {};
+var SAY = {};
+
+function mount(id){
+  var ex=EX[id], root=$('[data-ex="'+id+'"]'); if(!root) return;
+  var entries=[], html="";
+  if(ex.type==="select"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i;
+      html+=card(i+1,'<p class="qt">'+it.t.replace("___",sel(k,it.opts))+'</p>',k);
+      entries.push({k:k,a:it.a,why:it.why,opts:it.opts,kind:"select"});
+    });
+  } else if(ex.type==="mc"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i;
+      html+=card(i+1,'<p class="qtitle">'+it.q+'</p>'+radios(k,it.opts),k);
+      entries.push({k:k,a:it.a,why:it.why,opts:it.opts,kind:"radio"});
+    });
+  } else if(ex.type==="sr"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i; SAY[k]=it.say;
+      var inner='<div class="audio-row"><button class="play" data-say="'+k+'" aria-label="Play question '+(i+1)+'" aria-pressed="false">▶</button><span class="plays" data-count="'+k+'">Not played yet</span></div>'+radios(k,it.opts)+'<details><summary>Transcript</summary><div class="script"><p>'+it.say+'</p></div></details>';
+      html+=card(i+1,inner,k);
+      entries.push({k:k,a:it.a,why:it.why,opts:it.opts,kind:"radio"});
+    });
+  } else if(ex.type==="use"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i;
+      html+=card(i+1,'<p class="qt"><i>'+it.t+'</i></p><p class="qt">Reason: '+sel(k,USES)+'</p>',k);
+      entries.push({k:k,a:it.a,why:"",opts:USES,kind:"select"});
+    });
+  } else if(ex.type==="gap"){
+    var n=0;
+    ex.texts.forEach(function(tx,ti){
+      var listId="fbs-"+id+"-"+ti;
+      var body=tx.html.replace(/\[\[(\d+)\]\]/g,function(m,g){
+        var gap=tx.gaps[+g]; n++;
+        var k=id+"-"+ti+"-"+g;
+        entries.push({k:k,a:gap.a,why:gap.why,opts:gap.opts,kind:"select",list:listId,num:n});
+        return '<span class="gapwrap"><sup class="gapn">'+n+'</sup>'+sel(k,gap.opts)+'</span>';
+      });
+      html+='<div class="gaptext"><span class="qn">'+(ti+1)+'</span>'+body+'</div><ul class="fbs" id="'+listId+'"></ul>';
+    });
+  }
+  html+='<div class="bar"><button class="btn" data-check="'+id+'">Check answers</button><button class="btn ghost" data-reveal="'+id+'">Show answers</button><button class="btn ghost" data-reset="'+id+'">Reset</button><span class="score" id="score-'+id+'" aria-live="polite"></span></div>';
+  root.innerHTML=html;
+  STATE[id]={entries:entries};
+}
+
+function getVal(e){
+  if(e.kind==="radio"){var c=$('input[name="'+e.k+'"]:checked');return c?+c.value:null}
+  var s=$('select[data-k="'+e.k+'"]');return s.value===""?null:+s.value;
+}
+function setVal(e,v){
+  if(e.kind==="radio"){var r=$('input[name="'+e.k+'"][value="'+v+'"]');if(r)r.checked=true}
+  else {$('select[data-k="'+e.k+'"]').value=String(v)}
+}
+function clearMarks(e){
+  if(e.kind==="select"){var s=$('select[data-k="'+e.k+'"]');s.classList.remove("ok","ko")}
+  else {$$('#q-'+cssEsc(e.k)+' .opt').forEach(function(o){o.classList.remove("right","wrong")})}
+  var fb=document.getElementById("fb-"+e.k); if(fb) fb.innerHTML="";
+}
+function cssEsc(s){return s.replace(/([^\w-])/g,"\\$1")}
+function mark(e,v){
+  var good=v===e.a;
+  if(e.kind==="select"){$('select[data-k="'+e.k+'"]').classList.add(good?"ok":"ko")}
+  else {
+    $$('#q-'+cssEsc(e.k)+' .opt').forEach(function(o){
+      var i=+o.getAttribute("data-o");
+      if(i===e.a) o.classList.add("right"); else if(i===v) o.classList.add("wrong");
+    });
+  }
+  var head = good ? '<span class="r">✓ Correct.</span> ' : (v===null ? '<span class="w">No answer.</span> Correct answer: <b>'+e.opts[e.a]+'</b>. ' : '<span class="w">✗ Not this one.</span> Correct answer: <b>'+e.opts[e.a]+'</b>. ');
+  var msg = head + (e.why||"");
+  if(e.list){
+    var ul=document.getElementById(e.list);
+    var li=document.createElement("li"); li.innerHTML="<b>"+e.num+".</b> "+msg; ul.appendChild(li);
+  } else {
+    var fb=document.getElementById("fb-"+e.k); if(fb) fb.innerHTML=msg;
+  }
+  return good;
+}
+function check(id,reveal){
+  var st=STATE[id], ok=0;
+  st.entries.forEach(function(e){ if(e.list){ var ul=document.getElementById(e.list); if(ul) ul.innerHTML=""; } });
+  st.entries.forEach(function(e){
+    clearMarks(e);
+    if(reveal) setVal(e,e.a);
+    if(mark(e,getVal(e))) ok++;
+  });
+  $("#score-"+id).textContent = reveal ? "Answers shown" : ok+" / "+st.entries.length;
+  var sec=$('[data-ex="'+id+'"]').closest("section");
+  var step=$('.steps a[data-step="'+sec.id+'"]'); if(step) step.classList.add("done");
+}
+function reset(id){
+  var st=STATE[id];
+  st.entries.forEach(function(e){
+    clearMarks(e);
+    if(e.kind==="radio"){$$('input[name="'+e.k+'"]').forEach(function(r){r.checked=false})}
+    else {$('select[data-k="'+e.k+'"]').value=""}
+    if(e.list){var ul=document.getElementById(e.list); if(ul) ul.innerHTML=""}
+  });
+  $("#score-"+id).textContent="";
+}
+
+Object.keys(EX).forEach(mount);
+document.addEventListener("click",function(ev){
+  var b=ev.target.closest("button"); if(!b) return;
+  if(b.dataset.check) check(b.dataset.check,false);
+  else if(b.dataset.reveal) check(b.dataset.reveal,true);
+  else if(b.dataset.reset) reset(b.dataset.reset);
+  else if(b.dataset.time) setTimer(+b.dataset.time);
+  else if(b.dataset.say) playLines([{w:"A",t:SAY[b.dataset.say]}],b,b.dataset.say);
+  else if(b.dataset.audio) playLines(AUDIO[b.dataset.audio],b,b.dataset.audio);
+  else if(b.dataset.m){ var box=document.getElementById(b.dataset.m); var on=box.classList.toggle("shown"); b.textContent=on?"Hide":"Check"; }
+  else if(b.dataset.mistAll){ var id=b.dataset.mistAll; $$('[data-mist="'+id+'"] .mist').forEach(function(m){m.classList.add("shown")}); $$('[data-mist="'+id+'"] [data-m]').forEach(function(x){x.textContent="Hide"}); var sec=b.closest("section"); var st=$('.steps a[data-step="'+sec.id+'"]'); if(st) st.classList.add("done"); }
+});
+Object.keys(MIST).forEach(function(id){
+  var h=""; MIST[id].forEach(function(m,i){
+    h+='<div class="q"><span class="qn">'+(i+1)+'</span><div class="mist" id="'+id+'-'+i+'"><span>'+m.t+'</span><button class="mini" data-m="'+id+'-'+i+'">Check</button><span class="fix">'+m.fix+'</span><span class="why">'+m.why+'</span></div></div>';
+  });
+  $('[data-mist="'+id+'"]').innerHTML=h;
+});
+$$("[data-script]").forEach(function(el){
+  var id=el.getAttribute("data-script");
+  el.innerHTML=AUDIO[id].map(function(l){return "<p><b>"+NAMES[id][l.w]+":</b> "+l.t+"</p>"}).join("");
+});
+$$("textarea[data-wc]").forEach(function(ta){
+  var wc=$('[data-wc-for="'+ta.getAttribute("data-wc")+'"]'), target=+wc.getAttribute("data-target");
+  ta.addEventListener("input",function(){
+    var n=ta.value.trim()?ta.value.trim().split(/\s+/).length:0;
+    wc.textContent=n; wc.classList.toggle("good",n>=target); wc.classList.toggle("low",n<target);
+  });
+});
+/* ===================== AUDIO (speech synthesis) ===================== */
+var synth = ("speechSynthesis" in window) ? window.speechSynthesis : null;
+var VOICES=[], current=null, counts={};
+function loadVoices(){
+  if(!synth) return;
+  VOICES=synth.getVoices().filter(function(v){return /^en([-_]|$)/i.test(v.lang)});
+}
+if(synth){ loadVoices(); if("onvoiceschanged" in synth) synth.onvoiceschanged=loadVoices; }
+setTimeout(function(){ if(!synth || !VOICES.length){ document.body.classList.add("no-tts") } },2000);
+function voiceFor(who){
+  if(!VOICES.length) return null;
+  var pref=VOICES.filter(function(v){return /GB/i.test(v.lang)}).concat(VOICES.filter(function(v){return /US/i.test(v.lang)}),VOICES);
+  var first=pref[0];
+  var second=pref.filter(function(v){return v.name!==first.name})[0]||first;
+  return who==="B"?second:first;
+}
+function stopAudio(){
+  if(synth) synth.cancel();
+  if(current){current.classList.remove("on");current.setAttribute("aria-pressed","false");current.textContent="▶";current=null}
+}
+function playLines(lines,btn,key){
+  if(!synth){document.body.classList.add("no-tts");return}
+  if(current===btn){stopAudio();return}
+  stopAudio();
+  current=btn; btn.classList.add("on"); btn.setAttribute("aria-pressed","true"); btn.textContent="■";
+  counts[key]=(counts[key]||0)+1;
+  var c=$('[data-count="'+key+'"]'); if(c) c.textContent="Played "+counts[key]+(counts[key]===1?" time":" times");
+  var rate=parseFloat($("#rate").value)||0.92;
+  var chunks=[];
+  lines.forEach(function(l){ l.t.split(/(?<=[.!?])\s+/).forEach(function(s){ if(s.trim()) chunks.push({w:l.w,t:s}) }) });
+  chunks.forEach(function(ch,i){
+    var u=new SpeechSynthesisUtterance(ch.t);
+    var v=voiceFor(ch.w);
+    if(v){u.voice=v;u.lang=v.lang}else{u.lang="en-GB"}
+    u.rate=rate; u.pitch=ch.w==="B"?0.8:1.05;
+    if(i===chunks.length-1){u.onend=function(){ if(current===btn) stopAudio() }}
+    synth.speak(u);
+  });
+}
+
+/* ===================== TIMER ===================== */
+var T={left:0,h:null,run:false};
+var tEl=$("#timer");
+function drawT(){
+  var m=Math.floor(T.left/60), s=T.left%60;
+  $("#tm").textContent=(m<10?"0":"")+m; $("#ts").textContent=(s<10?"0":"")+s;
+  tEl.classList.toggle("paused",!T.run);
+}
+function tick(){
+  if(T.left>0){T.left--;drawT()}
+  if(T.left<=0){clearInterval(T.h);T.run=false;drawT();tEl.classList.remove("done");void tEl.offsetWidth;tEl.classList.add("done")}
+}
+function startT(){clearInterval(T.h);T.run=true;T.h=setInterval(tick,1000);drawT()}
+function setTimer(min){T.left=min*60;tEl.classList.remove("done");startT()}
+tEl.addEventListener("click",function(){
+  if(T.left<=0) return;
+  if(T.run){clearInterval(T.h);T.run=false;drawT()} else startT();
+});
+drawT();
+
+/* ===================== TOGGLES ===================== */
+$("#teacherBtn").addEventListener("click",function(){
+  var on=document.body.classList.toggle("teacher");
+  this.setAttribute("aria-pressed",on?"true":"false");
+});
+var themeBtn=$("#themeBtn");
+function isDark(){
+  var t=document.documentElement.getAttribute("data-theme");
+  if(t) return t==="dark";
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+function syncTheme(){themeBtn.textContent=isDark()?"Light mode":"Dark mode"}
+themeBtn.addEventListener("click",function(){
+  document.documentElement.setAttribute("data-theme",isDark()?"light":"dark"); syncTheme();
+});
+syncTheme();
+
+/* ===================== ACTIVE STEP ===================== */
+var links=$$(".steps a");
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(en){
+      if(en.isIntersecting){
+        links.forEach(function(a){a.classList.toggle("active",a.dataset.step===en.target.id)});
+        var act=$('.steps a.active'), nav=$("#steps"); if(act && nav) nav.scrollLeft=act.offsetLeft-nav.clientWidth/2+act.clientWidth/2;
+      }
+    });
+  },{rootMargin:"-40% 0px -55% 0px"});
+  $$("section.block").forEach(function(s){io.observe(s)});
+}
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+var PAGE = document.body.getAttribute("data-page") || "page";
+var KEY = "lpt-answers-" + PAGE, PKEY = "lpt-progress-" + PAGE;
+function load(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch(e){ return null; } }
+function save(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+function $$(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+
+/* ---------- restore saved answers ---------- */
+var saved = load(KEY) || {};
+$$("select[data-k]").forEach(function(el){ var v = saved["s:" + el.getAttribute("data-k")]; if (v != null) el.value = v; });
+$$("input[type=radio]").forEach(function(el){ if (saved["r:" + el.name] === el.value) el.checked = true; });
+$$("textarea[id], input[type=text]").forEach(function(el, i){ var id = el.id || ("t" + i); var v = saved["t:" + id]; if (v != null) { el.value = v; el.dispatchEvent(new Event("input")); } });
+
+function collect(){
+  var o = {};
+  $$("select[data-k]").forEach(function(el){ if (el.value !== "") o["s:" + el.getAttribute("data-k")] = el.value; });
+  $$("input[type=radio]:checked").forEach(function(el){ o["r:" + el.name] = el.value; });
+  $$("textarea[id], input[type=text]").forEach(function(el, i){ var id = el.id || ("t" + i); if (el.value.trim()) o["t:" + id] = el.value; });
+  save(KEY, o);
+}
+
+/* ---------- progress ---------- */
+function words(t){ t = t.trim(); return t ? t.split(/\s+/).length : 0; }
+function measure(root){
+  var tot = 0, done = 0;
+  $$("select[data-k]", root).forEach(function(el){ tot++; if (el.value !== "") done++; });
+  var groups = {};
+  $$("input[type=radio]", root).forEach(function(el){ groups[el.name] = groups[el.name] || el.checked; });
+  Object.keys(groups).forEach(function(k){ tot++; if (groups[k]) done++; });
+  $$("input[type=text]", root).forEach(function(el){ tot++; if (el.value.trim()) done++; });
+  $$("textarea", root).forEach(function(el){
+    var wc = el.getAttribute("data-wc"), target = 0;
+    if (wc) { var t = document.querySelector('[data-wc-for="' + wc + '"]'); target = t ? +t.getAttribute("data-target") : 0; }
+    tot++; done += target ? Math.min(1, words(el.value) / target) : (el.value.trim() ? 1 : 0);
+  });
+  return { tot: tot, done: done };
+}
+var sections = $$("section.block").map(function(sec){
+  var m = measure(sec); if (!m.tot) return null;
+  var bar = document.createElement("div");
+  bar.className = "sprog";
+  bar.innerHTML = '<span class="sprog-track"><span class="sprog-fill"></span></span><span class="sprog-txt">0% completed</span>';
+  var head = sec.querySelector(".sec-head");
+  if (head) head.insertAdjacentElement("afterend", bar); else sec.insertBefore(bar, sec.firstChild);
+  return { sec: sec, bar: bar };
+}).filter(Boolean);
+
+var top = document.createElement("div");
+top.className = "tprog";
+top.innerHTML = '<span class="tprog-track"><span class="tprog-fill"></span></span><span class="tprog-txt">Session progress: 0%</span>';
+var header = document.querySelector("header.top");
+if (header) header.appendChild(top);
+
+function update(){
+  var T = 0, D = 0;
+  sections.forEach(function(x){
+    var m = measure(x.sec), p = Math.round(100 * m.done / m.tot);
+    T += m.tot; D += m.done;
+    x.bar.querySelector(".sprog-fill").style.width = p + "%";
+    x.bar.querySelector(".sprog-txt").textContent = p === 100 ? "100% completed ✓" : p + "% completed";
+    x.bar.classList.toggle("full", p === 100);
+    var step = document.querySelector('.steps a[data-step="' + x.sec.id + '"]');
+    if (step) step.classList.toggle("done", p === 100);
+  });
+  var tp = T ? Math.round(100 * D / T) : 0;
+  top.querySelector(".tprog-fill").style.width = tp + "%";
+  top.querySelector(".tprog-txt").textContent = "Session progress: " + tp + "%";
+  save(PKEY, tp);
+}
+var timer = null;
+function soon(){ clearTimeout(timer); timer = setTimeout(function(){ collect(); update(); }, 60); }
+document.addEventListener("change", soon);
+document.addEventListener("input", soon);
+document.addEventListener("click", function(ev){ if (ev.target.closest("button")) soon(); });
+update();
+})();
+
+</script>
+</body>
+</html>

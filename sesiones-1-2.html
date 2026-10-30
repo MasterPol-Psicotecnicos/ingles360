@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inglés 360 LPT · Sessions 1–2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bitter:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1EC; --paper:#FFFFFF; --ink:#1C2A24; --muted:#56655E; --line:#D3DBD4;
+  --green:#6BA539; --green-ink:#3F6E1A; --deep:#0E5641; --on-green:#FFFFFF;
+  --ps:#0E5641; --ps-bg:#E1EFE6;
+  --pc:#8A5200; --pc-bg:#FBEACB;
+  --pp:#22558F; --pp-bg:#E0EAF7;
+  --ok:#2E7D32; --ok-bg:#E4F2E2; --ko:#B3261E; --ko-bg:#FBE5E3;
+  --note-bg:#FFF4D6; --note-ink:#4F3B00;
+  --shadow:0 1px 2px rgba(20,40,30,.08);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111915; --paper:#1A2520; --ink:#E5EDE7; --muted:#A2B2A9; --line:#2E3C35;
+    --green:#7DBA48; --green-ink:#A8DA77; --deep:#86D3AE; --on-green:#0D1A10;
+    --ps:#8ED7B3; --ps-bg:#16342A; --pc:#F2B65A; --pc-bg:#3A2A0F; --pp:#93BDF0; --pp-bg:#162A41;
+    --ok:#83CF86; --ok-bg:#183019; --ko:#F2938A; --ko-bg:#3D1C1A;
+    --note-bg:#33290C; --note-ink:#F2DCA0; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111915; --paper:#1A2520; --ink:#E5EDE7; --muted:#A2B2A9; --line:#2E3C35;
+  --green:#7DBA48; --green-ink:#A8DA77; --deep:#86D3AE; --on-green:#0D1A10;
+  --ps:#8ED7B3; --ps-bg:#16342A; --pc:#F2B65A; --pc-bg:#3A2A0F; --pp:#93BDF0; --pp-bg:#162A41;
+  --ok:#83CF86; --ok-bg:#183019; --ko:#F2938A; --ko-bg:#3D1C1A;
+  --note-bg:#33290C; --note-ink:#F2DCA0; --shadow:none;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 132px);scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.55}
+h1,h2,h3,h4{font-family:"Bitter",Georgia,"Times New Roman",serif;line-height:1.2;margin:0}
+img{max-width:100%}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+
+/* ---------- Top bar (exam-like) ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.top-row{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:10px 18px}
+.badge{flex:none;width:52px;height:52px;border-radius:50%;border:5px solid var(--green);display:grid;place-items:center;font-family:"Bitter",serif;font-weight:700;font-size:13px;line-height:1;text-align:center;color:var(--green-ink)}
+.brand{min-width:0}
+.brand b{display:block;font-size:15px}
+.brand span{display:block;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tools{margin-left:auto;display:flex;align-items:center;gap:10px}
+.timer{display:flex;gap:2px;border:2px solid var(--green);padding:3px 10px;cursor:pointer;background:transparent;border-radius:3px}
+.timer div{text-align:center;min-width:44px}
+.timer strong{display:block;font-size:22px;line-height:1.1;color:var(--green-ink);font-variant-numeric:tabular-nums}
+.timer small{display:block;font-size:11px;color:var(--muted)}
+.timer.paused strong{opacity:.55}
+.timer.done{animation:blink 1s steps(2) 4}
+@keyframes blink{50%{background:var(--ko-bg)}}
+@media (prefers-reduced-motion: reduce){.timer.done{animation:none;background:var(--ko-bg)}}
+.tbtn{border:1px solid var(--line);background:transparent;border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;white-space:nowrap}
+.tbtn[aria-pressed="true"]{background:var(--note-bg);color:var(--note-ink);border-color:transparent}
+.steps{max-width:1100px;margin:0 auto;display:flex;gap:0;overflow-x:auto;padding:4px 18px 10px;scrollbar-width:thin}
+.steps a{flex:1 0 auto;min-width:92px;text-decoration:none;color:var(--muted);font-size:13px;text-align:center;position:relative;padding:4px 10px 0;white-space:nowrap}
+.steps a .dot{display:block;width:16px;height:16px;border-radius:50%;margin:6px auto 0;border:2px solid var(--line);background:var(--paper);position:relative;z-index:1;font-size:10px;line-height:12px;color:var(--on-green)}
+.steps a::after{content:"";position:absolute;left:0;right:0;bottom:7px;height:2px;background:var(--line)}
+.steps a.active{color:var(--green-ink);font-weight:700}
+.steps a.active .dot{border-color:var(--green);background:var(--green)}
+.steps a.done .dot{border-color:var(--green);background:var(--paper)}
+.steps a.done .dot::before{content:"✓";color:var(--green-ink);font-weight:700}
+@media (max-width:640px){.brand span{display:none}.tools .tbtn.hide-sm{display:none}}
+@media (max-width:480px){.brand{display:none}.top-row{gap:10px;padding:8px 12px}.badge{width:44px;height:44px;border-width:4px;font-size:11px}}
+
+/* ---------- Layout ---------- */
+main{max-width:860px;margin:0 auto;padding:12px 18px 80px}
+.hero{padding:34px 0 10px}
+.hero h1{font-size:clamp(28px,5vw,42px);font-weight:700;max-width:22ch}
+.hero p.lead{color:var(--muted);max-width:60ch;margin:12px 0 0}
+.contrast{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0 8px}
+.contrast div{padding:18px 18px 16px;border-radius:4px}
+.contrast .s{background:var(--ps-bg)}
+.contrast .c{background:var(--pc-bg)}
+.contrast q{display:block;line-height:1.25;font-family:"Bitter",serif;font-size:clamp(20px,3.2vw,27px);quotes:none;font-weight:700}
+.contrast .s q{color:var(--ps)} .contrast .c q{color:var(--pc)}
+.contrast span{display:block;font-size:15px;margin-top:6px;color:var(--ink)}
+@media (max-width:560px){.contrast{grid-template-columns:1fr}}
+
+section.block{padding-top:44px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);padding:12px 16px;margin-bottom:14px}
+.sec-head h2{font-size:22px}
+.sec-head .kind{color:var(--muted);font-size:17px}
+.instr{font-weight:700;color:var(--muted);margin:6px 0 12px}
+h3.sub{font-size:19px;margin:28px 0 10px}
+h4{font-size:16px;margin:16px 0 6px}
+p{margin:8px 0}
+.small{font-size:15px;color:var(--muted)}
+
+/* teacher notes */
+.tnote{display:none;background:var(--note-bg);color:var(--note-ink);padding:12px 14px;margin:12px 0;border-radius:4px;font-size:15px}
+.tnote strong:first-child{display:block;margin-bottom:2px}
+.tnote ul{margin:4px 0 0;padding-left:20px}
+body.teacher .tnote{display:block}
+
+/* exam-like question cards */
+.q,.gaptext{background:var(--paper);position:relative;padding:16px 18px 14px 62px;margin:0 0 10px;box-shadow:var(--shadow)}
+.q::before,.gaptext::before{content:"";position:absolute;left:0;top:0;width:46px;height:46px;background:var(--green);clip-path:polygon(0 0,100% 0,0 100%)}
+.qn{position:absolute;left:8px;top:5px;color:var(--on-green);font-weight:700;font-size:14px}
+.qt{margin:0 0 4px;line-height:2}
+.qtitle{font-weight:700;color:var(--deep);margin:0 0 6px}
+select{border:1px solid var(--line);background:var(--paper);border-radius:4px;padding:3px 6px;max-width:100%;font-size:16px;vertical-align:baseline}
+select.ok{border-color:var(--ok);background:var(--ok-bg)}
+select.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opts{display:grid;gap:4px;margin-top:4px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:5px 8px;border-radius:4px;cursor:pointer}
+.opt input{margin-top:5px;accent-color:var(--deep)}
+.opt.right{background:var(--ok-bg)}
+.opt.wrong{background:var(--ko-bg)}
+.fb{font-size:15px;margin-top:6px}
+.fb:empty{display:none}
+.fb .r{color:var(--ok);font-weight:700}
+.fb .w{color:var(--ko);font-weight:700}
+.fbs{list-style:none;padding:0;margin:-4px 0 14px;font-size:15px}
+.fbs li{padding:4px 0}
+.gapn{font-size:11px;font-weight:700;color:var(--green-ink);margin-right:2px}
+.gaptext p{line-height:2.1}
+
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 4px}
+.btn{border:0;border-radius:999px;padding:9px 20px;background:var(--green);color:var(--on-green);font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:400}
+.btn.time{background:transparent;color:var(--green-ink);border:1px solid var(--green);font-weight:700}
+.score{font-weight:700;margin-left:4px}
+
+/* audio */
+.play{flex:none;width:44px;height:44px;border-radius:50%;border:2px solid var(--green);background:var(--paper);color:var(--green-ink);cursor:pointer;display:grid;place-items:center;font-size:16px}
+.play.on{background:var(--green);color:var(--on-green)}
+.audio-row{display:flex;align-items:center;gap:12px;margin:0 0 8px}
+.audio-row .plays{font-size:13px;color:var(--muted)}
+.audio-note{display:none;background:var(--ko-bg);padding:10px 14px;border-radius:4px;font-size:15px;margin:8px 0}
+body.no-tts .audio-note{display:block}
+details{margin:8px 0}
+summary{cursor:pointer;color:var(--green-ink);font-weight:700}
+.script{background:var(--paper);border:1px dashed var(--line);padding:12px 16px;font-size:16px}
+.script p{margin:4px 0}
+
+/* grammar */
+.tense-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.tense-grid{grid-template-columns:1fr}}
+.tense{padding:18px;border-radius:4px}
+.tense.ps{background:var(--ps-bg)} .tense.pc{background:var(--pc-bg)} .tense.pp{background:var(--pp-bg)}
+.tense h3{font-size:22px}
+.tense.ps h3{color:var(--ps)} .tense.pc h3{color:var(--pc)} .tense.pp h3{color:var(--pp)}
+.tense .tag{margin:2px 0 10px;font-style:italic}
+.table-wrap{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700}
+.tense table td:first-child{color:var(--muted);white-space:nowrap}
+.uses{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.uses li b{display:block}
+.uses li span{display:block;font-style:italic}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:15px}
+.tense .chip{border-color:transparent}
+.paper{background:var(--paper);padding:14px 16px;box-shadow:var(--shadow);margin:10px 0}
+.v-ps{color:var(--ps);font-weight:700} .v-pc{color:var(--pc);font-weight:700} .v-pp{color:var(--pp);font-weight:700}
+.traps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.trap{background:var(--paper);padding:10px 12px;box-shadow:var(--shadow)}
+.trap s{color:var(--ko)} .trap b{color:var(--ok)}
+.order{display:grid;grid-template-columns:repeat(4,auto);gap:4px 8px;justify-content:start;font-size:16px}
+.order .h{font-size:13px;color:var(--muted)}
+.order .cell{background:var(--paper);padding:4px 10px;box-shadow:var(--shadow)}
+
+/* mistakes */
+.mist{display:flex;gap:12px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.mist .fix{display:none;color:var(--ok);font-weight:700}
+.mist.shown .fix{display:inline}
+.mist .why{display:none;font-size:15px;color:var(--muted);width:100%}
+.mist.shown .why{display:block}
+.mini{border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 12px;font-size:14px;cursor:pointer}
+
+/* make questions */
+.mq input{width:100%;border:1px solid var(--line);border-radius:4px;padding:7px 10px;background:var(--paper);margin-top:4px}
+.mq .model{display:none;color:var(--ok);font-weight:700;margin-top:4px}
+.models-on .mq .model{display:block}
+
+/* speaking & writing */
+.prompt{background:var(--paper);padding:16px 18px;box-shadow:var(--shadow)}
+.prompt ul{margin:6px 0 0;padding-left:22px}
+.email{background:var(--paper);padding:16px 18px;box-shadow:var(--shadow);font-size:16px}
+.email .hdr{margin-bottom:10px}
+.task{background:var(--paper);border:1px solid var(--line);padding:12px 16px;font-weight:700;margin-bottom:0}
+textarea{width:100%;min-height:260px;border:1px solid var(--line);border-radius:4px;padding:12px;background:var(--paper);line-height:1.6;resize:vertical}
+.wc{font-weight:700}
+.wc.low{color:var(--ko)} .wc.good{color:var(--ok)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:700px){.cols{grid-template-columns:1fr}}
+.checklist{list-style:none;padding:0;margin:6px 0}
+.checklist li{display:flex;gap:8px;align-items:flex-start;padding:3px 0}
+.checklist input{margin-top:6px;accent-color:var(--deep)}
+
+/* structure table */
+.struct th,.struct td{vertical-align:top}
+.struct td b{display:block}
+.struct td span{display:block;font-style:italic;color:var(--muted);margin-top:3px}
+.struct tr.r-ps th:first-child{color:var(--ps)} .struct tr.r-pc th:first-child{color:var(--pc)}
+.struct .k-ps{color:var(--ps)} .struct .k-pc{color:var(--pc)}
+/* prepositions */
+.preps{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.prep{background:var(--paper);box-shadow:var(--shadow);padding:8px 8px 10px;text-align:center}
+.prep svg{width:100%;height:auto;max-width:150px}
+.prep b{display:block;font-size:16px}
+.prep .bx{fill:var(--ps-bg);stroke:var(--ps);stroke-width:2.5}
+.prep .bl{fill:var(--pc)}
+.prep .ln{stroke:var(--muted);stroke-width:2;stroke-dasharray:4 4}
+.pic{margin:0 0 12px;background:var(--paper);box-shadow:var(--shadow);padding:8px}
+.pic svg{display:block;width:100%;height:auto}
+.part{margin:56px 0 0;padding:22px 20px;border-radius:4px;background:var(--deep);color:var(--paper)}
+.part h2{font-size:26px}
+.part p{margin:6px 0 0;opacity:.9}
+:root[data-theme="dark"] .part{color:#0D1A10}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .part{color:#0D1A10}}
+footer{color:var(--muted);font-size:14px;text-align:center;padding:30px 0 10px}
+
+@media print{
+  .top,.bar,.play,.tools{display:none!important}
+  body{background:#fff}
+  .q,.gaptext,.paper,.prompt,.email{box-shadow:none;border:1px solid #ccc}
+  section.block{break-inside:avoid-page}
+}
+
+.v-pc{color:var(--pc);font-weight:700}
+.home-link{color:inherit;text-decoration:none;display:inline-flex;align-items:center}
+</style>
+<style>
+.tnote,#teacherBtn{display:none!important}
+.sprog{display:flex;align-items:center;gap:12px;margin:-4px 0 14px}
+.sprog-track,.tprog-track{flex:1;height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.sprog-fill,.tprog-fill{display:block;height:100%;width:0;background:var(--green);transition:width .3s}
+.sprog-txt{flex:none;font-size:14px;font-weight:700;color:var(--muted);min-width:9.5em;text-align:right;font-variant-numeric:tabular-nums}
+.sprog.full .sprog-txt{color:var(--green-ink)}
+.tprog{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:0 18px 10px}
+.tprog-track{height:8px}
+.tprog-txt{flex:none;font-size:13px;font-weight:700;color:var(--green-ink);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){.sprog-fill,.tprog-fill{transition:none}}
+</style>
+</head>
+<body data-page="s12">
+<header class="top">
+  <div class="top-row">
+    <div class="badge" aria-hidden="true">360<br>LPT</div>
+    <div class="brand"><b>Inglés 360 LPT · Sessions 1–2</b><span>to be · present simple · dates · describing people · routines</span></div>
+    <div class="tools">
+      <a class="tbtn home-link" href="index.html">← Inicio</a>
+      <button class="timer paused" id="timer" title="Click to pause or resume" aria-label="Timer. Click to pause or resume">
+        <div><strong id="tm">00</strong><small>Minutes</small></div>
+        <div><strong id="ts">00</strong><small>Seconds</small></div>
+      </button>
+      <button class="tbtn" id="teacherBtn" hidden>Notes</button>
+      <button class="tbtn hide-sm" id="themeBtn">Dark mode</button>
+    </div>
+  </div>
+  <nav class="steps" id="steps" aria-label="Sections">
+    <a href="#s1-listen" data-step="s1-listen">S1 · Listening<span class="dot"></span></a>
+    <a href="#s1-be" data-step="s1-be">to be<span class="dot"></span></a>
+    <a href="#s1-ps" data-step="s1-ps">Present simple<span class="dot"></span></a>
+    <a href="#s1-read" data-step="s1-read">Reading<span class="dot"></span></a>
+    <a href="#s1-speak" data-step="s1-speak">Speaking<span class="dot"></span></a>
+    <a href="#s1-write" data-step="s1-write">Writing<span class="dot"></span></a>
+    <a href="#s2-listen" data-step="s2-listen">S2 · Listening<span class="dot"></span></a>
+    <a href="#s2-people" data-step="s2-people">People<span class="dot"></span></a>
+    <a href="#s2-routine" data-step="s2-routine">Routines<span class="dot"></span></a>
+    <a href="#s2-read" data-step="s2-read">Gap Fill<span class="dot"></span></a>
+    <a href="#s2-speak" data-step="s2-speak">Speaking<span class="dot"></span></a>
+    <a href="#s2-write" data-step="s2-write">Writing<span class="dot"></span></a>
+  </nav>
+</header>
+<main>
+<div class="hero">
+  <h1>Getting to know you</h1>
+  <p class="lead">Session 1: introducing yourself with to be, possessives, the present simple, dates and frequency. Session 2: describing people, daily routines and your home. All with real 360 LPT tasks.</p>
+  <div class="contrast">
+    <div class="s"><q>I'm 27 and I live in Elche.</q><span>Session 1 · talking about yourself, like in the Warm Up.</span></div>
+    <div class="c"><q>She's tall and she's got curly hair.</q><span>Session 2 · describing people and your day.</span></div>
+  </div>
+</div>
+
+<div class="part"><h2>Session 1</h2><p>to be · possessives · present simple · dates and times · frequency</p></div>
+
+<section class="block" id="s1-listen"><div class="sec-head"><h2>Listening</h2><span class="kind">Statement-Response · Short Conversation</span></div>
+  <div class="audio-note">Audio isn't available in this browser. Your teacher will read the recordings aloud.</div>
+  <h3 class="sub" style="margin-top:4px">Part 1 · Statement-Response</h3>
+  <p class="instr">Listen to the question and choose the best response.</p>
+  <div class="bar"><button class="btn time" data-time="3">Start 3-min timer</button><label class="small">Audio speed <select id="rate"><option value="0.92">Normal</option><option value="0.78">Slower</option></select></label></div>
+  <div data-ex="sr1"></div>
+  <h3 class="sub">Part 2 · Short Conversation</h3>
+  <p class="instr">Read the questions first. Then listen and choose the best answer.</p>
+  <div class="audio-row"><button class="play" data-audio="conv1" aria-label="Play audio" aria-pressed="false">▶</button><span class="plays" data-count="conv1">Not played yet</span></div><div data-ex="conv1"></div><details><summary>Transcript</summary><div class="script" data-script="conv1"></div></details>
+</section>
+
+<section class="block" id="s1-be"><div class="sec-head"><h2>Grammar</h2><span class="kind">to be · possessives</span></div>
+  <div class="paper table-wrap"><table><tr><th></th><th>+</th><th>–</th><th>?</th></tr><tr><td><b>I</b></td><td>am ('m)</td><td>am not ('m not)</td><td>Am I…?</td></tr><tr><td><b>you / we / they</b></td><td>are ('re)</td><td>are not (aren't)</td><td>Are you…?</td></tr><tr><td><b>he / she / it</b></td><td>is ('s)</td><td>is not (isn't)</td><td>Is she…?</td></tr></table></div>
+  <div class="paper table-wrap"><table><tr><th>Subject</th><th>Possessive</th></tr><tr><td>I</td><td><b>my</b></td></tr><tr><td>you</td><td><b>your</b></td></tr><tr><td>he</td><td><b>his</b></td></tr><tr><td>she</td><td><b>her</b></td></tr><tr><td>it</td><td><b>its</b></td></tr><tr><td>we</td><td><b>our</b></td></tr><tr><td>they</td><td><b>their</b></td></tr></table></div>
+  <div class="traps">
+    <div class="trap"><s>I have 30 years.</s><br><b>I'm 30.</b></div>
+    <div class="trap"><s>Where did you born?</s><br><b>Where were you born?</b></div>
+    <div class="trap"><s>their / there / they're</s><br><b>their = possession</b></div>
+  </div>
+  <h3 class="sub">Incomplete Sentences</h3><p class="instr">Choose the word or phrase that best completes the sentence.</p><div class="bar"><button class="btn time" data-time="4">Start 4-min timer</button></div><div data-ex="inc1a"></div>
+</section>
+
+<section class="block" id="s1-ps"><div class="sec-head"><h2>Grammar</h2><span class="kind">Present simple · time · frequency</span></div>
+  <div class="paper table-wrap"><table><tr><th></th><th>Present simple</th></tr><tr><td><b>+</b></td><td>I / you / we / they <b>work</b> · he / she / it <b>works</b></td></tr><tr><td><b>–</b></td><td>I <b>don't work</b> · she <b>doesn't work</b></td></tr><tr><td><b>?</b></td><td><b>Do</b> you work? · <b>Does</b> she work?</td></tr></table></div>
+  <div class="cols">
+    <div class="paper"><b>Prepositions of time</b><p style="margin:4px 0 0"><b>at</b> + time: at nine, at night<br><b>on</b> + day / date: on Monday, on 5th May<br><b>in</b> + month / year / part of the day: in June, in 2025, in the morning</p></div>
+    <div class="paper"><b>Frequency</b><p style="margin:4px 0 0"><b>always</b> 100% · <b>usually</b> 90% · <b>often</b> 70% · <b>sometimes</b> 50% · <b>rarely</b> 10% · <b>never</b> 0%<br>Before the main verb: I <b>usually</b> walk.<br>After to be: I'm <b>never</b> late.</p></div>
+  </div>
+  <h3 class="sub">Dates and ordinals</h3>
+  <div class="chips"><span class="chip">1st = first</span><span class="chip">2nd = second</span><span class="chip">3rd = third</span><span class="chip">4th = fourth</span><span class="chip">5th = fifth</span><span class="chip">8th = eighth</span><span class="chip">9th = ninth</span><span class="chip">12th = twelfth</span><span class="chip">20th = twentieth</span><span class="chip">21st = twenty-first</span><span class="chip">22nd = twenty-second</span><span class="chip">31st = thirty-first</span></div>
+  <p class="small">We write <i>5th May</i> and say <i>the fifth of May</i>.</p>
+  <h3 class="sub">Incomplete Sentences</h3><p class="instr">Choose the word or phrase that best completes the sentence.</p><div class="bar"><button class="btn time" data-time="4">Start 4-min timer</button></div><div data-ex="inc1b"></div>
+  <h3 class="sub">Spot the mistake</h3>
+  <p class="instr">Each sentence has one mistake. Find it, then check.</p>
+  <div data-mist="mist1"></div>
+  <div class="bar"><button class="btn ghost" data-mist-all="mist1">Show all corrections</button></div>
+</section>
+
+<section class="block" id="s1-read"><div class="sec-head"><h2>Reading</h2><span class="kind">Gap Fill · Text Comprehension</span></div>
+  <h3 class="sub" style="margin-top:4px">Gap Fill Text</h3>
+  <p class="instr">Read the whole text first. Then choose the best option for each gap.</p>
+  <div data-ex="gap1"></div>
+  <h3 class="sub">Text Comprehension</h3>
+  <p class="instr">Read the text and answer the questions.</p>
+  <div class="bar"><button class="btn time" data-time="6">Start 6-min timer</button></div>
+  <div class="email"><div class="hdr"><b>From:</b> Marta López, Course Coordinator<br><b>To:</b> New students<br><b>Subject:</b> Welcome to the English course</div><p>Dear students,</p><p>Welcome to the English course at CAPMAN! My name is Marta and I am the course coordinator.</p><p>Classes are on Mondays and Wednesdays from six to seven in Room 4. Your teacher is María, and she is from Elche. She usually sends homework by email on Fridays.</p><p>Please bring a notebook and a pen to every class. You don't need a book. The first class is on Monday, the 3rd of November.</p><p>If you can't come to a class, please send me an email before three o'clock.</p><p>Best regards,<br>Marta</p></div>
+  <div style="height:12px"></div><div data-ex="tc1"></div>
+</section>
+
+<section class="block" id="s1-speak"><div class="sec-head"><h2>Speaking</h2><span class="kind">Warm Up</span></div>
+  <p class="instr">Answer the questions for 1 minute without stopping. Record yourself on your phone.</p>
+  <div class="prompt"><ul><li>What's your name? Where are you from?</li><li>Where do you live? Who do you live with?</li><li>What do you do? Where do you work or study?</li><li>When is your birthday?</li><li>What do you usually do on Saturdays? How often do you do sport?</li></ul></div>
+  <div class="bar"><button class="btn time" data-time="1">Start 1-min timer</button></div>
+</section>
+
+<section class="block" id="s1-write"><div class="sec-head"><h2>Writing</h2><span class="kind">E-mail reply</span></div><p class="task">Read Marta's e-mail again and write a reply. Introduce yourself (name, age, where you live, job or studies), say what you do in your free time and how often, and ask her one question about the course. (Min. 80 words)</p>
+  <div class="paper" style="margin-top:12px"><b>Checklist</b><ul class="checklist"><li><input type="checkbox" id="w1c0"><label for="w1c0">Name, age and where you live</label></li><li><input type="checkbox" id="w1c1"><label for="w1c1">Job or studies</label></li><li><input type="checkbox" id="w1c2"><label for="w1c2">Free time and how often</label></li><li><input type="checkbox" id="w1c3"><label for="w1c3">One question about the course</label></li><li><input type="checkbox" id="w1c4"><label for="w1c4">Greeting and closing</label></li></ul></div>
+  <div class="bar"><button class="btn time" data-time="15">Start 15-min timer</button><span>Words: <span class="wc low" data-wc-for="w1" data-target="80">0</span> / 80</span></div>
+  <label for="w1-ta" class="small">Write here (nothing is saved — copy your text before closing).</label>
+  <textarea id="w1-ta" data-wc="w1" spellcheck="false" placeholder="Dear Marta,"></textarea>
+  <details><summary>Model answer</summary><div class="email"><p>Dear Marta,</p><p>Thank you for your email. <span class="v-pp">My name is</span> Javier Molina and <span class="v-pp">I'm 24 years old</span>. <span class="v-pp">I'm from</span> Crevillent, but <span class="v-pc">I live</span> in Elche with my girlfriend.</p><p><span class="v-pc">I work</span> in a supermarket from Monday to Friday, and I <span class="v-pc">usually finish</span> at five, so the class time is perfect for me. In my free time <span class="v-pc">I go</span> to the gym <span class="v-pc">three times a week</span>, and I <span class="v-pc">sometimes play</span> football with my friends on Sundays.</p><p>I have one question: <span class="v-pc">do we have</span> an exam at the end of the course?</p><p>See you on Monday,<br>Javier</p><p class="small"><span class="v-pp">■</span> to be · <span class="v-pc">■</span> present simple and frequency</p></div></details></section>
+
+<div class="part"><h2>Session 2</h2><p>describing people · have got · daily routines · home</p></div>
+
+<section class="block" id="s2-listen"><div class="sec-head"><h2>Listening</h2><span class="kind">Statement-Response · Short Talk</span></div>
+  <div class="audio-note">Audio isn't available in this browser. Your teacher will read the recordings aloud.</div>
+  <h3 class="sub" style="margin-top:4px">Part 1 · Statement-Response</h3>
+  <p class="instr">Listen to the question and choose the best response.</p>
+  <div class="bar"><button class="btn time" data-time="3">Start 3-min timer</button></div>
+  <div data-ex="sr2"></div>
+  <h3 class="sub">Part 2 · Short Talk</h3>
+  <p class="instr">Read the questions first. Then listen and choose the best answer.</p>
+  <div class="audio-row"><button class="play" data-audio="talk2" aria-label="Play audio" aria-pressed="false">▶</button><span class="plays" data-count="talk2">Not played yet</span></div><div data-ex="talk2"></div><details><summary>Transcript</summary><div class="script" data-script="talk2"></div></details>
+</section>
+
+<section class="block" id="s2-people"><div class="sec-head"><h2>Vocabulary</h2><span class="kind">Describing people · have got</span></div>
+  <div class="paper table-wrap"><table><tr><th>Appearance</th><th></th></tr><tr><td><b>Height</b></td><td>tall · short · medium height</td></tr><tr><td><b>Build</b></td><td>slim · well-built · a bit overweight</td></tr><tr><td><b>Hair</b></td><td>long · short · straight · curly · dark · fair · grey · bald</td></tr><tr><td><b>Eyes</b></td><td>blue · brown · green · dark</td></tr><tr><td><b>Other</b></td><td>a beard · a moustache · glasses</td></tr></table></div>
+  <div class="paper table-wrap"><table><tr><th>Personality ☺</th><th>Opposite</th></tr><tr><td>friendly</td><td>unfriendly</td></tr><tr><td>hard-working</td><td>lazy</td></tr><tr><td>patient</td><td>impatient</td></tr><tr><td>polite</td><td>rude</td></tr><tr><td>quiet</td><td>talkative</td></tr><tr><td>calm</td><td>nervous</td></tr><tr><td>funny</td><td>serious</td></tr><tr><td>generous</td><td>mean</td></tr></table></div>
+  <div class="cols">
+    <div class="paper"><b>have got</b><p style="margin:4px 0 0">I / you / we / they <b>have ('ve) got</b><br>he / she / it <b>has ('s) got</b><br><b>Have</b> you <b>got</b>…? · I <b>haven't got</b>…</p></div>
+    <div class="paper"><b>Three questions</b><p style="margin:4px 0 0">What does he <b>look like</b>? → tall, dark hair<br>What <b>is</b> he <b>like</b>? → friendly, funny<br>What does he <b>like</b>? → football, music</p></div>
+  </div>
+  <h3 class="sub">Incomplete Sentences</h3><p class="instr">Choose the word or phrase that best completes the sentence.</p><div class="bar"><button class="btn time" data-time="4">Start 4-min timer</button></div><div data-ex="inc2a"></div>
+</section>
+
+<section class="block" id="s2-routine"><div class="sec-head"><h2>Vocabulary</h2><span class="kind">Daily routines</span></div>
+  <div class="paper table-wrap"><table><tr><th>Verb</th><th>Goes with…</th></tr><tr><td><b>get</b></td><td>up · dressed · to work · home</td></tr><tr><td><b>have</b></td><td>a shower · breakfast · lunch · dinner</td></tr><tr><td><b>go</b></td><td>to work · to bed · to the gym · for a run · shopping</td></tr></table></div>
+  <p class="small">Also: <b>do</b> homework / housework · <b>start / finish</b> work · <b>go home</b>, <b>get home</b> (no “to”).</p>
+  <h3 class="sub">Incomplete Sentences</h3><p class="instr">Choose the word or phrase that best completes the sentence.</p><div class="bar"><button class="btn time" data-time="3">Start 3-min timer</button></div><div data-ex="inc2b"></div>
+  <h3 class="sub">Spot the mistake</h3>
+  <p class="instr">Each sentence has one mistake. Find it, then check.</p>
+  <div data-mist="mist2"></div>
+  <div class="bar"><button class="btn ghost" data-mist-all="mist2">Show all corrections</button></div>
+</section>
+
+<section class="block" id="s2-read"><div class="sec-head"><h2>Reading</h2><span class="kind">Gap Fill Text</span></div>
+  <p class="instr">Read the whole text first. Then choose the best option for each gap.</p>
+  <div class="bar"><button class="btn time" data-time="4">Start 4-min timer</button></div>
+  <div data-ex="gap2"></div>
+</section>
+
+<section class="block" id="s2-speak"><div class="sec-head"><h2>Speaking</h2><span class="kind">Warm Up · describing</span></div>
+  <p class="instr">Talk for 1 minute about each question. Record yourself on your phone.</p>
+  <div class="prompt"><ul><li>Describe a person in your family: What does he/she look like? What is he/she like?</li><li>Describe your typical day: What time do you get up? What do you do in the morning, afternoon and evening?</li><li>What do you do at the weekend that is different?</li></ul></div>
+  <div class="bar"><button class="btn time" data-time="1">Start 1-min timer</button></div>
+</section>
+
+<section class="block" id="s2-write"><div class="sec-head"><h2>Writing</h2><span class="kind">E-mail to a friend</span></div><p class="task">Your friend Sam is coming to stay with you for a week. Write an e-mail to Sam: describe your typical day (times and activities), describe one person in your family he will meet (appearance and personality), and tell him one thing about your home. (Min. 80 words)</p>
+  <div class="paper" style="margin-top:12px"><b>Checklist</b><ul class="checklist"><li><input type="checkbox" id="w2c0"><label for="w2c0">Your typical day with times</label></li><li><input type="checkbox" id="w2c1"><label for="w2c1">A family member: appearance</label></li><li><input type="checkbox" id="w2c2"><label for="w2c2">A family member: personality</label></li><li><input type="checkbox" id="w2c3"><label for="w2c3">One thing about your home</label></li><li><input type="checkbox" id="w2c4"><label for="w2c4">Greeting and closing</label></li></ul></div>
+  <div class="bar"><button class="btn time" data-time="15">Start 15-min timer</button><span>Words: <span class="wc low" data-wc-for="w2" data-target="80">0</span> / 80</span></div>
+  <label for="w2-ta" class="small">Write here (nothing is saved — copy your text before closing).</label>
+  <textarea id="w2-ta" data-wc="w2" spellcheck="false" placeholder="Hi Sam,"></textarea>
+  <details><summary>Model answer</summary><div class="email"><p>Hi Sam,</p><p>I'm really happy you're coming next week! Here's some information about my routine. <span class="v-pc">I get up</span> at seven, <span class="v-pc">have breakfast</span> and <span class="v-pc">go to work</span> by bus. <span class="v-pc">I get home</span> at about six, and I usually <span class="v-pc">go for a run</span> before dinner.</p><p>You're going to meet my sister, Laura. She's 22, <span class="v-pp">she's quite short</span> and <span class="v-pp">she's got long curly hair and brown eyes</span>. She's <span class="v-pp">very funny and talkative</span>, so you'll like her!</p><p>Our flat is small, but <span class="v-pp">there's a sofa bed</span> in the living room for you.</p><p>See you soon,<br>Ana</p><p class="small"><span class="v-pc">■</span> routine verbs · <span class="v-pp">■</span> describing people and home</p></div></details></section>
+<footer>Inglés 360 LPT · CAPMAN · Material de práctica con formato del examen 360 LPT · Sesiones 1 y 2</footer>
+</main>
+<script>
+(function(){
+"use strict";
+var EX = {"sr1":{"type":"sr","items":[{"say":"What's your surname?","opts":["I'm fine, thanks.","I'm from Elche.","It's García."],"a":2,"why":"Surname = family name. A answers “How are you?”; B answers “Where are you from?”."},{"say":"Where are you from?","opts":["I'm a nurse.","I'm 28.","From Murcia, but I live in Alicante now."],"a":2,"why":"Where → a place. B answers “How old are you?”."},{"say":"When is your birthday?","opts":["On the fifth of May.","In my house.","I'm thirty."],"a":0,"why":"When + birthday → a date: on the fifth of May."},{"say":"What do you do?","opts":["I do it every day.","I work in a bank.","I'm doing my homework."],"a":1,"why":"“What do you do?” = What's your job? C uses the wrong tense."},{"say":"How often do you go to the gym?","opts":["By car.","For one hour.","Three times a week."],"a":2,"why":"How often → frequency. A answers “how”; B answers “how long”."},{"say":"Nice to meet you.","opts":["Yes, I meet people.","Nice to meet you too.","I'm meeting you tomorrow."],"a":1,"why":"The normal answer: Nice to meet you too."}]},"conv1":{"type":"mc","items":[{"q":"Why is Carlos at reception?","opts":["He's meeting a friend.","He's a new teacher.","He's looking for a job.","He's starting an English course."],"a":3,"why":"“Are you here for the English course? — Yes, I am.”"},{"q":"How do you spell his surname?","opts":["R-U-E-Z","R-O-I-Z","R-U-I-S","R-U-I-Z"],"a":3,"why":"“It's R-U-I-Z.”"},{"q":"Where is the class?","opts":["In Room 4, on the first floor","At reception","In Room 1, on the fourth floor","In Room 6, on the ground floor"],"a":0,"why":"“The class is in Room 4, on the first floor.”"},{"q":"When are the classes?","opts":["On Mondays at four","On Wednesdays at eight","On Mondays and Wednesdays at six","Every day at six"],"a":2,"why":"“It starts at six o'clock on Mondays and Wednesdays.”"}]},"inc1a":{"type":"select","items":[{"t":"My sister ___ a police officer.","opts":["be","am","are","is"],"a":3,"why":"she → is."},{"t":"___ you from Valencia?","opts":["Is","Do","Am","Are"],"a":3,"why":"Question with to be: Are you…?"},{"t":"This is Pedro. ___ wife is a teacher.","opts":["He","His","Her","Their"],"a":1,"why":"Pedro (he) → his."},{"t":"We ___ not in the same class.","opts":["are","do","am","is"],"a":0,"why":"we → are."},{"t":"Ana and Luis live in Elche. ___ house is near the station.","opts":["They're","Them","Their","There"],"a":2,"why":"Possession for they → their. (there = place, they're = they are.)"},{"t":"I ___ 25 years old.","opts":["am","have","has","is"],"a":0,"why":"Age with to be: I am 25 (not “I have 25”)."},{"t":"What ___ your phone number?","opts":["do","be","is","are"],"a":2,"why":"your phone number (it) → is."},{"t":"My brother ___ married. He's single.","opts":["aren't","don't","isn't","not"],"a":2,"why":"he → isn't."}]},"inc1b":{"type":"select","items":[{"t":"She ___ in an office in Alicante.","opts":["working","is work","work","works"],"a":3,"why":"she → verb + -s."},{"t":"___ your brother live with you?","opts":["Do","Are","Is","Does"],"a":3,"why":"your brother (he) → Does…?"},{"t":"I ___ like coffee. I prefer tea.","opts":["don't","am not","not","doesn't"],"a":0,"why":"I → don't."},{"t":"My classes start ___ nine o'clock.","opts":["to","in","at","on"],"a":2,"why":"Clock times → at."},{"t":"My birthday is ___ June.","opts":["for","at","in","on"],"a":2,"why":"Months → in."},{"t":"We have English class ___ Monday.","opts":["the","in","at","on"],"a":3,"why":"Days → on."},{"t":"I ___ late for work. I'm always on time.","opts":["never am","don't never","am never","never is"],"a":2,"why":"Frequency adverbs go after to be: I am never late."},{"t":"He ___ to the gym after work.","opts":["is usually go","usually goes","usually go","goes usually"],"a":1,"why":"Frequency adverbs go before the main verb: usually goes."}]},"gap1":{"type":"gap","texts":[{"html":"<p class='qtitle'>E-mail</p><p>Hi Emma,</p><p>My name [[0]] Lucía and I'm your new classmate in the English course. I'm 27 and I [[1]] in Elche with my parents. I work in a shop, so I [[2]] finish work at eight. [[3]] Saturdays I play basketball with my friends. My birthday is [[4]] the 14th of March. What about you?</p><p>See you on Monday,</p><p>Lucía</p>","gaps":[{"opts":["am","has","are","is"],"a":3,"why":"My name (it) → is."},{"opts":["am live","living","lives","live"],"a":3,"why":"I → live."},{"opts":["usually am","usually","usual","am usually"],"a":1,"why":"Adverb before the main verb: I usually finish."},{"opts":["At","On","The","In"],"a":1,"why":"Days → on Saturdays."},{"opts":["for","at","on","in"],"a":2,"why":"Dates → on the 14th of March."}]}]},"tc1":{"type":"mc","items":[{"q":"What kind of text is this?","opts":["A memo","A formal letter","An advertisement","An e-mail"],"a":3,"why":"From / To / Subject → an e-mail."},{"q":"What is the purpose of the text?","opts":["To ask for a book","To change the timetable","To give information to new students","To complain about a class"],"a":2,"why":"Welcome + timetable + what to bring."},{"q":"When are the classes?","opts":["On Fridays","Every day at six","On Mondays from three to four","On Mondays and Wednesdays from six to seven"],"a":3,"why":"“Classes are on Mondays and Wednesdays from six to seven.”"},{"q":"What do students need to bring?","opts":["Nothing","A book","A notebook and a pen","A computer"],"a":2,"why":"“Please bring a notebook and a pen…”"},{"q":"What should you do if you can't come to a class?","opts":["Go to Room 4","Call María on Friday","Bring a notebook","Send Marta an email before three o'clock"],"a":3,"why":"“…please send me an email before three o'clock.”"}]},"sr2":{"type":"sr","items":[{"say":"What does your brother look like?","opts":["He likes football.","He looks at his phone.","He's tall and he's got short dark hair."],"a":2,"why":"“What does he look like?” asks about appearance. A answers “What does he like?”."},{"say":"What's your best friend like?","opts":["She likes pizza.","She's like 30.","She's very friendly and funny."],"a":2,"why":"“What is she like?” asks about personality."},{"say":"Have you got any brothers or sisters?","opts":["No, I don't like them.","Yes, I've got one sister.","Yes, I am."],"a":1,"why":"Have you got…? → Yes, I have / I've got…"},{"say":"What time do you usually get up?","opts":["At about seven.","For ten minutes.","I get up in my bedroom."],"a":0,"why":"What time → a time: at about seven."},{"say":"Do you have breakfast at home?","opts":["Breakfast is good.","Yes, I'm having.","No, I usually have a coffee at work."],"a":2,"why":"Do you…? → Yes / No + information."},{"say":"Is there a lift in your building?","opts":["Yes, it is.","No, there aren't any.","No, there isn't. I live on the third floor!"],"a":2,"why":"Is there…? → Yes, there is / No, there isn't."}]},"talk2":{"type":"mc","items":[{"q":"What is Daniel's job?","opts":["Police officer","Nurse","Doctor","Firefighter"],"a":3,"why":"“I'm a firefighter.”"},{"q":"How does he go to work?","opts":["By bus","On foot","By motorbike","By car"],"a":2,"why":"“…go to the fire station by motorbike.”"},{"q":"What does he usually do after a shift?","opts":["He goes to bed for a few hours.","He goes to the mountains.","He has a shower and goes to work.","He meets his wife at the hospital."],"a":0,"why":"“After a shift, I usually go to bed for a few hours.”"},{"q":"What is true about his wife?","opts":["She works shifts too.","She's a firefighter.","She doesn't work.","She works from home."],"a":0,"why":"“She's a nurse, and she works shifts too!”"}]},"inc2a":{"type":"select","items":[{"t":"My father ___ got grey hair.","opts":["does","is","have","has"],"a":3,"why":"he → has got."},{"t":"___ you got a car?","opts":["Have","Has","Are","Do"],"a":0,"why":"Question: Have you got…?"},{"t":"She's got ___ eyes.","opts":["the blue","blue","blues","a blue"],"a":1,"why":"Adjectives don't change in English: blue eyes."},{"t":"He's very ___. He always works until late.","opts":["lazy","rude","hard-working","mean"],"a":2,"why":"Always works late → hard-working."},{"t":"My new boss ___ really friendly.","opts":["has","are","have","is"],"a":3,"why":"Personality with to be: she is friendly."},{"t":"I haven't ___ any brothers.","opts":["gotten","get","have","got"],"a":3,"why":"haven't got."},{"t":"He's got ___ hair and a beard.","opts":["shorts dark","a short dark","short dark","dark short"],"a":2,"why":"Order: size before colour → short dark hair (no “a” with hair)."},{"t":"What does your sister ___ like? — She's tall and slim.","opts":["look","have","is","looks"],"a":0,"why":"What does she look like? (does + base form)."}]},"inc2b":{"type":"select","items":[{"t":"I ___ up at seven every morning.","opts":["have","do","go","get"],"a":3,"why":"get up."},{"t":"She ___ a shower before breakfast.","opts":["has","makes","gets","goes"],"a":0,"why":"have a shower → she has."},{"t":"We ___ to bed at about eleven.","opts":["go","make","get","have"],"a":0,"why":"go to bed."},{"t":"He ___ home at six and has dinner.","opts":["goes to","gets","has","makes"],"a":1,"why":"get home (no “to” with home)."},{"t":"I ___ my homework in the evening.","opts":["make","get","have","do"],"a":3,"why":"do homework."},{"t":"Look! Marta ___ a red jacket today.","opts":["is wearing","has wearing","wears","wear"],"a":0,"why":"Happening now (Look! today) → present continuous."}]},"gap2":{"type":"gap","texts":[{"html":"<p class='qtitle'>Memo</p><p><b>To:</b> All staff</p><p><b>From:</b> Raquel Gómez, Office Manager</p><p><b>Subject:</b> Our new colleague</p><p>Dear colleagues,</p><p>Our new receptionist, Tom, starts on Monday. He's from Dublin and he [[0]] got a lot of experience in hotels. He's tall and he's got short [[1]] hair, so you can't miss him! Tom is very [[2]] and patient, and he speaks three languages. He usually [[3]] work at 8 a.m., so please say hello when you [[4]] to the office.</p><p>Raquel</p>","gaps":[{"opts":["does","is","have","has"],"a":3,"why":"he → has got."},{"opts":["reds","redly","red","a red"],"a":2,"why":"Adjective, no -s: short red hair."},{"opts":["rude","mean","lazy","friendly"],"a":3,"why":"Positive personality, with “patient”."},{"opts":["is start","start","starting","starts"],"a":3,"why":"he usually → starts."},{"opts":["do","go","have","get"],"a":3,"why":"get to the office = arrive."}]}]}};
+var AUDIO = {"conv1":[{"w":"A","t":"Good morning. Are you here for the English course?"},{"w":"B","t":"Yes, I am. My name's Carlos Ruiz."},{"w":"A","t":"Welcome, Carlos. Can you spell your surname, please?"},{"w":"B","t":"Yes, it's R-U-I-Z."},{"w":"A","t":"Thank you. And what's your phone number?"},{"w":"B","t":"It's 655 34 21 98."},{"w":"A","t":"Perfect. The class is in Room 4, on the first floor. It starts at six o'clock on Mondays and Wednesdays."},{"w":"B","t":"Great. Thanks a lot."}],"talk2":[{"w":"A","t":"Hi, I'm Daniel. I'm a firefighter, so my routine is a bit different. I work twenty-four-hour shifts, from eight in the morning to eight the next morning. On work days I get up at half past six, have a quick shower and go to the fire station by motorbike. After a shift, I usually go to bed for a few hours. In the afternoon I go for a run or meet my friends. I've got two days off after every shift, so I often go to the mountains with my wife. She's a nurse, and she works shifts too!"}]};
+var NAMES = {"conv1":{"A":"Receptionist","B":"Carlos"},"talk2":{"A":"Daniel"}};
+var MIST = {"mist1":[{"t":"Where did you born?","fix":"Where were you born?","why":"be born → was / were born"},{"t":"I have 30 years.","fix":"I'm 30 (years old).","why":"age with to be"},{"t":"She live in Madrid.","fix":"She lives in Madrid.","why":"he / she / it → -s"},{"t":"Do she work here?","fix":"Does she work here?","why":"she → does"},{"t":"My birthday is in 5th May.","fix":"My birthday is on 5th May.","why":"dates → on"},{"t":"I go always to work by bus.","fix":"I always go to work by bus.","why":"adverb before the main verb"}],"mist2":[{"t":"She has got blond hairs.","fix":"She has got blond hair.","why":"hair is uncountable"},{"t":"He have got a beard.","fix":"He has got a beard.","why":"he → has"},{"t":"I go to home at six.","fix":"I go home at six.","why":"no “to” with home"},{"t":"My mother is very nice person.","fix":"My mother is a very nice person.","why":"a + adjective + noun"},{"t":"She has 40 years.","fix":"She's 40.","why":"age with to be"},{"t":"I make a shower every morning.","fix":"I have a shower every morning.","why":"have a shower"}]};
+var USES = [];
+/* ===================== HELPERS ===================== */
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function sel(k,opts){
+  var h='<select data-k="'+k+'" aria-label="Choose an option"><option value="">-----</option>';
+  opts.forEach(function(o,i){h+='<option value="'+i+'">'+o+'</option>'});
+  return h+'</select>';
+}
+function radios(k,opts){
+  var h='<div class="opts" role="radiogroup">';
+  opts.forEach(function(o,i){h+='<label class="opt" data-o="'+i+'"><input type="radio" name="'+k+'" value="'+i+'"><span>'+o+'</span></label>'});
+  return h+'</div>';
+}
+function card(n,inner,k){return '<div class="q" id="q-'+k+'"><span class="qn">'+n+'</span>'+inner+'<div class="fb" id="fb-'+k+'"></div></div>'}
+
+var STATE = {};
+var SAY = {};
+
+function mount(id){
+  var ex=EX[id], root=$('[data-ex="'+id+'"]'); if(!root) return;
+  var entries=[], html="";
+  if(ex.type==="select"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i;
+      html+=card(i+1,'<p class="qt">'+it.t.replace("___",sel(k,it.opts))+'</p>',k);
+      entries.push({k:k,a:it.a,why:it.why,opts:it.opts,kind:"select"});
+    });
+  } else if(ex.type==="mc"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i;
+      html+=card(i+1,'<p class="qtitle">'+it.q+'</p>'+radios(k,it.opts),k);
+      entries.push({k:k,a:it.a,why:it.why,opts:it.opts,kind:"radio"});
+    });
+  } else if(ex.type==="sr"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i; SAY[k]=it.say;
+      var inner='<div class="audio-row"><button class="play" data-say="'+k+'" aria-label="Play question '+(i+1)+'" aria-pressed="false">▶</button><span class="plays" data-count="'+k+'">Not played yet</span></div>'+radios(k,it.opts)+'<details><summary>Transcript</summary><div class="script"><p>'+it.say+'</p></div></details>';
+      html+=card(i+1,inner,k);
+      entries.push({k:k,a:it.a,why:it.why,opts:it.opts,kind:"radio"});
+    });
+  } else if(ex.type==="use"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i;
+      html+=card(i+1,'<p class="qt"><i>'+it.t+'</i></p><p class="qt">Reason: '+sel(k,USES)+'</p>',k);
+      entries.push({k:k,a:it.a,why:"",opts:USES,kind:"select"});
+    });
+  } else if(ex.type==="gap"){
+    var n=0;
+    ex.texts.forEach(function(tx,ti){
+      var listId="fbs-"+id+"-"+ti;
+      var body=tx.html.replace(/\[\[(\d+)\]\]/g,function(m,g){
+        var gap=tx.gaps[+g]; n++;
+        var k=id+"-"+ti+"-"+g;
+        entries.push({k:k,a:gap.a,why:gap.why,opts:gap.opts,kind:"select",list:listId,num:n});
+        return '<span class="gapwrap"><sup class="gapn">'+n+'</sup>'+sel(k,gap.opts)+'</span>';
+      });
+      html+='<div class="gaptext"><span class="qn">'+(ti+1)+'</span>'+body+'</div><ul class="fbs" id="'+listId+'"></ul>';
+    });
+  }
+  html+='<div class="bar"><button class="btn" data-check="'+id+'">Check answers</button><button class="btn ghost" data-reveal="'+id+'">Show answers</button><button class="btn ghost" data-reset="'+id+'">Reset</button><span class="score" id="score-'+id+'" aria-live="polite"></span></div>';
+  root.innerHTML=html;
+  STATE[id]={entries:entries};
+}
+
+function getVal(e){
+  if(e.kind==="radio"){var c=$('input[name="'+e.k+'"]:checked');return c?+c.value:null}
+  var s=$('select[data-k="'+e.k+'"]');return s.value===""?null:+s.value;
+}
+function setVal(e,v){
+  if(e.kind==="radio"){var r=$('input[name="'+e.k+'"][value="'+v+'"]');if(r)r.checked=true}
+  else {$('select[data-k="'+e.k+'"]').value=String(v)}
+}
+function clearMarks(e){
+  if(e.kind==="select"){var s=$('select[data-k="'+e.k+'"]');s.classList.remove("ok","ko")}
+  else {$$('#q-'+cssEsc(e.k)+' .opt').forEach(function(o){o.classList.remove("right","wrong")})}
+  var fb=document.getElementById("fb-"+e.k); if(fb) fb.innerHTML="";
+}
+function cssEsc(s){return s.replace(/([^\w-])/g,"\\$1")}
+function mark(e,v){
+  var good=v===e.a;
+  if(e.kind==="select"){$('select[data-k="'+e.k+'"]').classList.add(good?"ok":"ko")}
+  else {
+    $$('#q-'+cssEsc(e.k)+' .opt').forEach(function(o){
+      var i=+o.getAttribute("data-o");
+      if(i===e.a) o.classList.add("right"); else if(i===v) o.classList.add("wrong");
+    });
+  }
+  var head = good ? '<span class="r">✓ Correct.</span> ' : (v===null ? '<span class="w">No answer.</span> Correct answer: <b>'+e.opts[e.a]+'</b>. ' : '<span class="w">✗ Not this one.</span> Correct answer: <b>'+e.opts[e.a]+'</b>. ');
+  var msg = head + (e.why||"");
+  if(e.list){
+    var ul=document.getElementById(e.list);
+    var li=document.createElement("li"); li.innerHTML="<b>"+e.num+".</b> "+msg; ul.appendChild(li);
+  } else {
+    var fb=document.getElementById("fb-"+e.k); if(fb) fb.innerHTML=msg;
+  }
+  return good;
+}
+function check(id,reveal){
+  var st=STATE[id], ok=0;
+  st.entries.forEach(function(e){ if(e.list){ var ul=document.getElementById(e.list); if(ul) ul.innerHTML=""; } });
+  st.entries.forEach(function(e){
+    clearMarks(e);
+    if(reveal) setVal(e,e.a);
+    if(mark(e,getVal(e))) ok++;
+  });
+  $("#score-"+id).textContent = reveal ? "Answers shown" : ok+" / "+st.entries.length;
+  var sec=$('[data-ex="'+id+'"]').closest("section");
+  var step=$('.steps a[data-step="'+sec.id+'"]'); if(step) step.classList.add("done");
+}
+function reset(id){
+  var st=STATE[id];
+  st.entries.forEach(function(e){
+    clearMarks(e);
+    if(e.kind==="radio"){$$('input[name="'+e.k+'"]').forEach(function(r){r.checked=false})}
+    else {$('select[data-k="'+e.k+'"]').value=""}
+    if(e.list){var ul=document.getElementById(e.list); if(ul) ul.innerHTML=""}
+  });
+  $("#score-"+id).textContent="";
+}
+
+Object.keys(EX).forEach(mount);
+document.addEventListener("click",function(ev){
+  var b=ev.target.closest("button"); if(!b) return;
+  if(b.dataset.check) check(b.dataset.check,false);
+  else if(b.dataset.reveal) check(b.dataset.reveal,true);
+  else if(b.dataset.reset) reset(b.dataset.reset);
+  else if(b.dataset.time) setTimer(+b.dataset.time);
+  else if(b.dataset.say) playLines([{w:"A",t:SAY[b.dataset.say]}],b,b.dataset.say);
+  else if(b.dataset.audio) playLines(AUDIO[b.dataset.audio],b,b.dataset.audio);
+  else if(b.dataset.m){ var box=document.getElementById(b.dataset.m); var on=box.classList.toggle("shown"); b.textContent=on?"Hide":"Check"; }
+  else if(b.dataset.mistAll){ var id=b.dataset.mistAll; $$('[data-mist="'+id+'"] .mist').forEach(function(m){m.classList.add("shown")}); $$('[data-mist="'+id+'"] [data-m]').forEach(function(x){x.textContent="Hide"}); }
+});
+Object.keys(MIST).forEach(function(id){
+  var h=""; MIST[id].forEach(function(m,i){
+    h+='<div class="q"><span class="qn">'+(i+1)+'</span><div class="mist" id="'+id+'-'+i+'"><span>'+m.t+'</span><button class="mini" data-m="'+id+'-'+i+'">Check</button><span class="fix">'+m.fix+'</span><span class="why">'+m.why+'</span></div></div>';
+  });
+  $('[data-mist="'+id+'"]').innerHTML=h;
+});
+$$("[data-script]").forEach(function(el){
+  var id=el.getAttribute("data-script");
+  el.innerHTML=AUDIO[id].map(function(l){return "<p><b>"+NAMES[id][l.w]+":</b> "+l.t+"</p>"}).join("");
+});
+$$("textarea[data-wc]").forEach(function(ta){
+  var wc=$('[data-wc-for="'+ta.getAttribute("data-wc")+'"]'), target=+wc.getAttribute("data-target");
+  ta.addEventListener("input",function(){
+    var n=ta.value.trim()?ta.value.trim().split(/\s+/).length:0;
+    wc.textContent=n; wc.classList.toggle("good",n>=target); wc.classList.toggle("low",n<target);
+  });
+});
+/* ===================== AUDIO (speech synthesis) ===================== */
+var synth = ("speechSynthesis" in window) ? window.speechSynthesis : null;
+var VOICES=[], current=null, counts={};
+function loadVoices(){
+  if(!synth) return;
+  VOICES=synth.getVoices().filter(function(v){return /^en([-_]|$)/i.test(v.lang)});
+}
+if(synth){ loadVoices(); if("onvoiceschanged" in synth) synth.onvoiceschanged=loadVoices; }
+setTimeout(function(){ if(!synth || !VOICES.length){ document.body.classList.add("no-tts") } },2000);
+function voiceFor(who){
+  if(!VOICES.length) return null;
+  var pref=VOICES.filter(function(v){return /GB/i.test(v.lang)}).concat(VOICES.filter(function(v){return /US/i.test(v.lang)}),VOICES);
+  var first=pref[0];
+  var second=pref.filter(function(v){return v.name!==first.name})[0]||first;
+  return who==="B"?second:first;
+}
+function stopAudio(){
+  if(synth) synth.cancel();
+  if(current){current.classList.remove("on");current.setAttribute("aria-pressed","false");current.textContent="▶";current=null}
+}
+function playLines(lines,btn,key){
+  if(!synth){document.body.classList.add("no-tts");return}
+  if(current===btn){stopAudio();return}
+  stopAudio();
+  current=btn; btn.classList.add("on"); btn.setAttribute("aria-pressed","true"); btn.textContent="■";
+  counts[key]=(counts[key]||0)+1;
+  var c=$('[data-count="'+key+'"]'); if(c) c.textContent="Played "+counts[key]+(counts[key]===1?" time":" times");
+  var rate=parseFloat($("#rate").value)||0.92;
+  var chunks=[];
+  lines.forEach(function(l){ l.t.split(/(?<=[.!?])\s+/).forEach(function(s){ if(s.trim()) chunks.push({w:l.w,t:s}) }) });
+  chunks.forEach(function(ch,i){
+    var u=new SpeechSynthesisUtterance(ch.t);
+    var v=voiceFor(ch.w);
+    if(v){u.voice=v;u.lang=v.lang}else{u.lang="en-GB"}
+    u.rate=rate; u.pitch=ch.w==="B"?0.8:1.05;
+    if(i===chunks.length-1){u.onend=function(){ if(current===btn) stopAudio() }}
+    synth.speak(u);
+  });
+}
+
+/* ===================== TIMER ===================== */
+var T={left:0,h:null,run:false};
+var tEl=$("#timer");
+function drawT(){
+  var m=Math.floor(T.left/60), s=T.left%60;
+  $("#tm").textContent=(m<10?"0":"")+m; $("#ts").textContent=(s<10?"0":"")+s;
+  tEl.classList.toggle("paused",!T.run);
+}
+function tick(){
+  if(T.left>0){T.left--;drawT()}
+  if(T.left<=0){clearInterval(T.h);T.run=false;drawT();tEl.classList.remove("done");void tEl.offsetWidth;tEl.classList.add("done")}
+}
+function startT(){clearInterval(T.h);T.run=true;T.h=setInterval(tick,1000);drawT()}
+function setTimer(min){T.left=min*60;tEl.classList.remove("done");startT()}
+tEl.addEventListener("click",function(){
+  if(T.left<=0) return;
+  if(T.run){clearInterval(T.h);T.run=false;drawT()} else startT();
+});
+drawT();
+
+/* ===================== TOGGLES ===================== */
+$("#teacherBtn").addEventListener("click",function(){
+  var on=document.body.classList.toggle("teacher");
+  this.setAttribute("aria-pressed",on?"true":"false");
+});
+var themeBtn=$("#themeBtn");
+function isDark(){
+  var t=document.documentElement.getAttribute("data-theme");
+  if(t) return t==="dark";
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+function syncTheme(){themeBtn.textContent=isDark()?"Light mode":"Dark mode"}
+themeBtn.addEventListener("click",function(){
+  document.documentElement.setAttribute("data-theme",isDark()?"light":"dark"); syncTheme();
+});
+syncTheme();
+
+/* ===================== ACTIVE STEP ===================== */
+var links=$$(".steps a");
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(en){
+      if(en.isIntersecting){
+        links.forEach(function(a){a.classList.toggle("active",a.dataset.step===en.target.id)});
+        var act=$('.steps a.active'), nav=$("#steps"); if(act && nav) nav.scrollLeft=act.offsetLeft-nav.clientWidth/2+act.clientWidth/2;
+      }
+    });
+  },{rootMargin:"-40% 0px -55% 0px"});
+  $$("section.block").forEach(function(s){io.observe(s)});
+}
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+var PAGE = document.body.getAttribute("data-page") || "page";
+var KEY = "lpt-answers-" + PAGE, PKEY = "lpt-progress-" + PAGE;
+function load(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch(e){ return null; } }
+function save(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+function $$(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+
+/* ---------- restore saved answers ---------- */
+var saved = load(KEY) || {};
+$$("select[data-k]").forEach(function(el){ var v = saved["s:" + el.getAttribute("data-k")]; if (v != null) el.value = v; });
+$$("input[type=radio]").forEach(function(el){ if (saved["r:" + el.name] === el.value) el.checked = true; });
+$$("textarea[id], input[type=text]").forEach(function(el, i){ var id = el.id || ("t" + i); var v = saved["t:" + id]; if (v != null) { el.value = v; el.dispatchEvent(new Event("input")); } });
+
+function collect(){
+  var o = {};
+  $$("select[data-k]").forEach(function(el){ if (el.value !== "") o["s:" + el.getAttribute("data-k")] = el.value; });
+  $$("input[type=radio]:checked").forEach(function(el){ o["r:" + el.name] = el.value; });
+  $$("textarea[id], input[type=text]").forEach(function(el, i){ var id = el.id || ("t" + i); if (el.value.trim()) o["t:" + id] = el.value; });
+  save(KEY, o);
+}
+
+/* ---------- progress ---------- */
+function words(t){ t = t.trim(); return t ? t.split(/\s+/).length : 0; }
+function measure(root){
+  var tot = 0, done = 0;
+  $$("select[data-k]", root).forEach(function(el){ tot++; if (el.value !== "") done++; });
+  var groups = {};
+  $$("input[type=radio]", root).forEach(function(el){ groups[el.name] = groups[el.name] || el.checked; });
+  Object.keys(groups).forEach(function(k){ tot++; if (groups[k]) done++; });
+  $$("input[type=text]", root).forEach(function(el){ tot++; if (el.value.trim()) done++; });
+  $$("textarea", root).forEach(function(el){
+    var wc = el.getAttribute("data-wc"), target = 0;
+    if (wc) { var t = document.querySelector('[data-wc-for="' + wc + '"]'); target = t ? +t.getAttribute("data-target") : 0; }
+    tot++; done += target ? Math.min(1, words(el.value) / target) : (el.value.trim() ? 1 : 0);
+  });
+  return { tot: tot, done: done };
+}
+var sections = $$("section.block").map(function(sec){
+  var m = measure(sec); if (!m.tot) return null;
+  var bar = document.createElement("div");
+  bar.className = "sprog";
+  bar.innerHTML = '<span class="sprog-track"><span class="sprog-fill"></span></span><span class="sprog-txt">0% completed</span>';
+  var head = sec.querySelector(".sec-head");
+  if (head) head.insertAdjacentElement("afterend", bar); else sec.insertBefore(bar, sec.firstChild);
+  return { sec: sec, bar: bar };
+}).filter(Boolean);
+
+var top = document.createElement("div");
+top.className = "tprog";
+top.innerHTML = '<span class="tprog-track"><span class="tprog-fill"></span></span><span class="tprog-txt">Session progress: 0%</span>';
+var header = document.querySelector("header.top");
+if (header) header.appendChild(top);
+
+function update(){
+  var T = 0, D = 0;
+  sections.forEach(function(x){
+    var m = measure(x.sec), p = Math.round(100 * m.done / m.tot);
+    T += m.tot; D += m.done;
+    x.bar.querySelector(".sprog-fill").style.width = p + "%";
+    x.bar.querySelector(".sprog-txt").textContent = p === 100 ? "100% completed ✓" : p + "% completed";
+    x.bar.classList.toggle("full", p === 100);
+    var step = document.querySelector('.steps a[data-step="' + x.sec.id + '"]');
+    if (step) step.classList.toggle("done", p === 100);
+  });
+  var tp = T ? Math.round(100 * D / T) : 0;
+  top.querySelector(".tprog-fill").style.width = tp + "%";
+  top.querySelector(".tprog-txt").textContent = "Session progress: " + tp + "%";
+  save(PKEY, tp);
+}
+var timer = null;
+function soon(){ clearTimeout(timer); timer = setTimeout(function(){ collect(); update(); }, 60); }
+document.addEventListener("change", soon);
+document.addEventListener("input", soon);
+document.addEventListener("click", function(ev){ if (ev.target.closest("button")) soon(); });
+update();
+})();
+
+</script>
+</body>
+</html>

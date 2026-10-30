@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inglés 360 LPT · Mock Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bitter:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1EC; --paper:#FFFFFF; --ink:#1C2A24; --muted:#56655E; --line:#D3DBD4;
+  --green:#6BA539; --green-ink:#3F6E1A; --deep:#0E5641; --on-green:#FFFFFF;
+  --ps:#0E5641; --ps-bg:#E1EFE6;
+  --pc:#8A5200; --pc-bg:#FBEACB;
+  --pp:#22558F; --pp-bg:#E0EAF7;
+  --ok:#2E7D32; --ok-bg:#E4F2E2; --ko:#B3261E; --ko-bg:#FBE5E3;
+  --note-bg:#FFF4D6; --note-ink:#4F3B00;
+  --shadow:0 1px 2px rgba(20,40,30,.08);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111915; --paper:#1A2520; --ink:#E5EDE7; --muted:#A2B2A9; --line:#2E3C35;
+    --green:#7DBA48; --green-ink:#A8DA77; --deep:#86D3AE; --on-green:#0D1A10;
+    --ps:#8ED7B3; --ps-bg:#16342A; --pc:#F2B65A; --pc-bg:#3A2A0F; --pp:#93BDF0; --pp-bg:#162A41;
+    --ok:#83CF86; --ok-bg:#183019; --ko:#F2938A; --ko-bg:#3D1C1A;
+    --note-bg:#33290C; --note-ink:#F2DCA0; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111915; --paper:#1A2520; --ink:#E5EDE7; --muted:#A2B2A9; --line:#2E3C35;
+  --green:#7DBA48; --green-ink:#A8DA77; --deep:#86D3AE; --on-green:#0D1A10;
+  --ps:#8ED7B3; --ps-bg:#16342A; --pc:#F2B65A; --pc-bg:#3A2A0F; --pp:#93BDF0; --pp-bg:#162A41;
+  --ok:#83CF86; --ok-bg:#183019; --ko:#F2938A; --ko-bg:#3D1C1A;
+  --note-bg:#33290C; --note-ink:#F2DCA0; --shadow:none;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 132px);scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.55}
+h1,h2,h3,h4{font-family:"Bitter",Georgia,"Times New Roman",serif;line-height:1.2;margin:0}
+img{max-width:100%}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+
+/* ---------- Top bar (exam-like) ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.top-row{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:10px 18px}
+.badge{flex:none;width:52px;height:52px;border-radius:50%;border:5px solid var(--green);display:grid;place-items:center;font-family:"Bitter",serif;font-weight:700;font-size:13px;line-height:1;text-align:center;color:var(--green-ink)}
+.brand{min-width:0}
+.brand b{display:block;font-size:15px}
+.brand span{display:block;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tools{margin-left:auto;display:flex;align-items:center;gap:10px}
+.timer{display:flex;gap:2px;border:2px solid var(--green);padding:3px 10px;cursor:pointer;background:transparent;border-radius:3px}
+.timer div{text-align:center;min-width:44px}
+.timer strong{display:block;font-size:22px;line-height:1.1;color:var(--green-ink);font-variant-numeric:tabular-nums}
+.timer small{display:block;font-size:11px;color:var(--muted)}
+.timer.paused strong{opacity:.55}
+.timer.done{animation:blink 1s steps(2) 4}
+@keyframes blink{50%{background:var(--ko-bg)}}
+@media (prefers-reduced-motion: reduce){.timer.done{animation:none;background:var(--ko-bg)}}
+.tbtn{border:1px solid var(--line);background:transparent;border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;white-space:nowrap}
+.tbtn[aria-pressed="true"]{background:var(--note-bg);color:var(--note-ink);border-color:transparent}
+.steps{max-width:1100px;margin:0 auto;display:flex;gap:0;overflow-x:auto;padding:4px 18px 10px;scrollbar-width:thin}
+.steps a{flex:1 0 auto;min-width:92px;text-decoration:none;color:var(--muted);font-size:13px;text-align:center;position:relative;padding:4px 10px 0;white-space:nowrap}
+.steps a .dot{display:block;width:16px;height:16px;border-radius:50%;margin:6px auto 0;border:2px solid var(--line);background:var(--paper);position:relative;z-index:1;font-size:10px;line-height:12px;color:var(--on-green)}
+.steps a::after{content:"";position:absolute;left:0;right:0;bottom:7px;height:2px;background:var(--line)}
+.steps a.active{color:var(--green-ink);font-weight:700}
+.steps a.active .dot{border-color:var(--green);background:var(--green)}
+.steps a.done .dot{border-color:var(--green);background:var(--paper)}
+.steps a.done .dot::before{content:"✓";color:var(--green-ink);font-weight:700}
+@media (max-width:640px){.brand span{display:none}.tools .tbtn.hide-sm{display:none}}
+@media (max-width:480px){.brand{display:none}.top-row{gap:10px;padding:8px 12px}.badge{width:44px;height:44px;border-width:4px;font-size:11px}}
+
+/* ---------- Layout ---------- */
+main{max-width:860px;margin:0 auto;padding:12px 18px 80px}
+.hero{padding:34px 0 10px}
+.hero h1{font-size:clamp(28px,5vw,42px);font-weight:700;max-width:22ch}
+.hero p.lead{color:var(--muted);max-width:60ch;margin:12px 0 0}
+.contrast{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0 8px}
+.contrast div{padding:18px 18px 16px;border-radius:4px}
+.contrast .s{background:var(--ps-bg)}
+.contrast .c{background:var(--pc-bg)}
+.contrast q{display:block;line-height:1.25;font-family:"Bitter",serif;font-size:clamp(20px,3.2vw,27px);quotes:none;font-weight:700}
+.contrast .s q{color:var(--ps)} .contrast .c q{color:var(--pc)}
+.contrast span{display:block;font-size:15px;margin-top:6px;color:var(--ink)}
+@media (max-width:560px){.contrast{grid-template-columns:1fr}}
+
+section.block{padding-top:44px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);padding:12px 16px;margin-bottom:14px}
+.sec-head h2{font-size:22px}
+.sec-head .kind{color:var(--muted);font-size:17px}
+.instr{font-weight:700;color:var(--muted);margin:6px 0 12px}
+h3.sub{font-size:19px;margin:28px 0 10px}
+h4{font-size:16px;margin:16px 0 6px}
+p{margin:8px 0}
+.small{font-size:15px;color:var(--muted)}
+
+/* teacher notes */
+.tnote{display:none;background:var(--note-bg);color:var(--note-ink);padding:12px 14px;margin:12px 0;border-radius:4px;font-size:15px}
+.tnote strong:first-child{display:block;margin-bottom:2px}
+.tnote ul{margin:4px 0 0;padding-left:20px}
+body.teacher .tnote{display:block}
+
+/* exam-like question cards */
+.q,.gaptext{background:var(--paper);position:relative;padding:16px 18px 14px 62px;margin:0 0 10px;box-shadow:var(--shadow)}
+.q::before,.gaptext::before{content:"";position:absolute;left:0;top:0;width:46px;height:46px;background:var(--green);clip-path:polygon(0 0,100% 0,0 100%)}
+.qn{position:absolute;left:8px;top:5px;color:var(--on-green);font-weight:700;font-size:14px}
+.qt{margin:0 0 4px;line-height:2}
+.qtitle{font-weight:700;color:var(--deep);margin:0 0 6px}
+select{border:1px solid var(--line);background:var(--paper);border-radius:4px;padding:3px 6px;max-width:100%;font-size:16px;vertical-align:baseline}
+select.ok{border-color:var(--ok);background:var(--ok-bg)}
+select.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opts{display:grid;gap:4px;margin-top:4px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:5px 8px;border-radius:4px;cursor:pointer}
+.opt input{margin-top:5px;accent-color:var(--deep)}
+.opt.right{background:var(--ok-bg)}
+.opt.wrong{background:var(--ko-bg)}
+.fb{font-size:15px;margin-top:6px}
+.fb:empty{display:none}
+.fb .r{color:var(--ok);font-weight:700}
+.fb .w{color:var(--ko);font-weight:700}
+.fbs{list-style:none;padding:0;margin:-4px 0 14px;font-size:15px}
+.fbs li{padding:4px 0}
+.gapn{font-size:11px;font-weight:700;color:var(--green-ink);margin-right:2px}
+.gaptext p{line-height:2.1}
+
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 4px}
+.btn{border:0;border-radius:999px;padding:9px 20px;background:var(--green);color:var(--on-green);font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:400}
+.btn.time{background:transparent;color:var(--green-ink);border:1px solid var(--green);font-weight:700}
+.score{font-weight:700;margin-left:4px}
+
+/* audio */
+.play{flex:none;width:44px;height:44px;border-radius:50%;border:2px solid var(--green);background:var(--paper);color:var(--green-ink);cursor:pointer;display:grid;place-items:center;font-size:16px}
+.play.on{background:var(--green);color:var(--on-green)}
+.audio-row{display:flex;align-items:center;gap:12px;margin:0 0 8px}
+.audio-row .plays{font-size:13px;color:var(--muted)}
+.audio-note{display:none;background:var(--ko-bg);padding:10px 14px;border-radius:4px;font-size:15px;margin:8px 0}
+body.no-tts .audio-note{display:block}
+details{margin:8px 0}
+summary{cursor:pointer;color:var(--green-ink);font-weight:700}
+.script{background:var(--paper);border:1px dashed var(--line);padding:12px 16px;font-size:16px}
+.script p{margin:4px 0}
+
+/* grammar */
+.tense-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.tense-grid{grid-template-columns:1fr}}
+.tense{padding:18px;border-radius:4px}
+.tense.ps{background:var(--ps-bg)} .tense.pc{background:var(--pc-bg)} .tense.pp{background:var(--pp-bg)}
+.tense h3{font-size:22px}
+.tense.ps h3{color:var(--ps)} .tense.pc h3{color:var(--pc)} .tense.pp h3{color:var(--pp)}
+.tense .tag{margin:2px 0 10px;font-style:italic}
+.table-wrap{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700}
+.tense table td:first-child{color:var(--muted);white-space:nowrap}
+.uses{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.uses li b{display:block}
+.uses li span{display:block;font-style:italic}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:15px}
+.tense .chip{border-color:transparent}
+.paper{background:var(--paper);padding:14px 16px;box-shadow:var(--shadow);margin:10px 0}
+.v-ps{color:var(--ps);font-weight:700} .v-pc{color:var(--pc);font-weight:700} .v-pp{color:var(--pp);font-weight:700}
+.traps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.trap{background:var(--paper);padding:10px 12px;box-shadow:var(--shadow)}
+.trap s{color:var(--ko)} .trap b{color:var(--ok)}
+.order{display:grid;grid-template-columns:repeat(4,auto);gap:4px 8px;justify-content:start;font-size:16px}
+.order .h{font-size:13px;color:var(--muted)}
+.order .cell{background:var(--paper);padding:4px 10px;box-shadow:var(--shadow)}
+
+/* mistakes */
+.mist{display:flex;gap:12px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.mist .fix{display:none;color:var(--ok);font-weight:700}
+.mist.shown .fix{display:inline}
+.mist .why{display:none;font-size:15px;color:var(--muted);width:100%}
+.mist.shown .why{display:block}
+.mini{border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 12px;font-size:14px;cursor:pointer}
+
+/* make questions */
+.mq input{width:100%;border:1px solid var(--line);border-radius:4px;padding:7px 10px;background:var(--paper);margin-top:4px}
+.mq .model{display:none;color:var(--ok);font-weight:700;margin-top:4px}
+.models-on .mq .model{display:block}
+
+/* speaking & writing */
+.prompt{background:var(--paper);padding:16px 18px;box-shadow:var(--shadow)}
+.prompt ul{margin:6px 0 0;padding-left:22px}
+.email{background:var(--paper);padding:16px 18px;box-shadow:var(--shadow);font-size:16px}
+.email .hdr{margin-bottom:10px}
+.task{background:var(--paper);border:1px solid var(--line);padding:12px 16px;font-weight:700;margin-bottom:0}
+textarea{width:100%;min-height:260px;border:1px solid var(--line);border-radius:4px;padding:12px;background:var(--paper);line-height:1.6;resize:vertical}
+.wc{font-weight:700}
+.wc.low{color:var(--ko)} .wc.good{color:var(--ok)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:700px){.cols{grid-template-columns:1fr}}
+.checklist{list-style:none;padding:0;margin:6px 0}
+.checklist li{display:flex;gap:8px;align-items:flex-start;padding:3px 0}
+.checklist input{margin-top:6px;accent-color:var(--deep)}
+
+/* structure table */
+.struct th,.struct td{vertical-align:top}
+.struct td b{display:block}
+.struct td span{display:block;font-style:italic;color:var(--muted);margin-top:3px}
+.struct tr.r-ps th:first-child{color:var(--ps)} .struct tr.r-pc th:first-child{color:var(--pc)}
+.struct .k-ps{color:var(--ps)} .struct .k-pc{color:var(--pc)}
+/* prepositions */
+.preps{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.prep{background:var(--paper);box-shadow:var(--shadow);padding:8px 8px 10px;text-align:center}
+.prep svg{width:100%;height:auto;max-width:150px}
+.prep b{display:block;font-size:16px}
+.prep .bx{fill:var(--ps-bg);stroke:var(--ps);stroke-width:2.5}
+.prep .bl{fill:var(--pc)}
+.prep .ln{stroke:var(--muted);stroke-width:2;stroke-dasharray:4 4}
+.pic{margin:0 0 12px;background:var(--paper);box-shadow:var(--shadow);padding:8px}
+.pic svg{display:block;width:100%;height:auto}
+.part{margin:56px 0 0;padding:22px 20px;border-radius:4px;background:var(--deep);color:var(--paper)}
+.part h2{font-size:26px}
+.part p{margin:6px 0 0;opacity:.9}
+:root[data-theme="dark"] .part{color:#0D1A10}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .part{color:#0D1A10}}
+footer{color:var(--muted);font-size:14px;text-align:center;padding:30px 0 10px}
+
+@media print{
+  .top,.bar,.play,.tools{display:none!important}
+  body{background:#fff}
+  .q,.gaptext,.paper,.prompt,.email{box-shadow:none;border:1px solid #ccc}
+  section.block{break-inside:avoid-page}
+}
+
+
+.v-pc{color:var(--pc);font-weight:700}
+.mock [data-ex] > .bar{display:none}
+.mock:not(.done) details.after,.mock:not(.done) .q details{display:none}
+.mock.done [data-finish]{display:none}
+.results:empty{display:none}
+.rtable{width:100%;margin-top:8px}
+.rtable td{padding:6px 8px;border-bottom:1px solid var(--line)}
+.rtable tr.weak td:first-child,.rtable tr.weak td:nth-child(2){color:var(--ko);font-weight:700}
+.rbar{display:inline-block;width:110px;height:10px;background:var(--line);border-radius:5px;vertical-align:middle;overflow:hidden}
+.rbar span{display:block;height:100%;background:var(--green)}
+.rtable tr.weak .rbar span{background:var(--ko)}
+h4{font-family:"Bitter",Georgia,serif}
+
+</style>
+
+<style>
+.tnote,#teacherBtn{display:none!important}
+.sprog{display:flex;align-items:center;gap:12px;margin:-4px 0 14px}
+.sprog-track,.tprog-track{flex:1;height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.sprog-fill,.tprog-fill{display:block;height:100%;width:0;background:var(--green);transition:width .3s}
+.sprog-txt{flex:none;font-size:14px;font-weight:700;color:var(--muted);min-width:9.5em;text-align:right;font-variant-numeric:tabular-nums}
+.sprog.full .sprog-txt{color:var(--green-ink)}
+.tprog{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:0 18px 10px}
+.tprog-track{height:8px}
+.tprog-txt{flex:none;font-size:13px;font-weight:700;color:var(--green-ink);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){.sprog-fill,.tprog-fill{transition:none}}
+</style>
+<style>.home-link{color:inherit;text-decoration:none;display:inline-flex;align-items:center}</style>
+</head>
+<body data-page="s910">
+<header class="top">
+  <div class="top-row">
+    <div class="badge" aria-hidden="true">360<br>LPT</div>
+    <div class="brand"><b>Inglés 360 LPT · Mock Exam</b><span>Sessions 9–10 · Listening · Reading · Speaking · Writing</span></div>
+    <div class="tools">
+      <a class="tbtn home-link" href="index.html">← Inicio</a>
+      <button class="timer paused" id="timer" title="Click to pause or resume" aria-label="Timer. Click to pause or resume">
+        <div><strong id="tm">00</strong><small>Minutes</small></div>
+        <div><strong id="ts">00</strong><small>Seconds</small></div>
+      </button>
+      <button class="tbtn" id="teacherBtn" hidden>Notes</button>
+      <button class="tbtn hide-sm" id="themeBtn">Dark mode</button>
+    </div>
+  </div>
+  <nav class="steps" id="steps" aria-label="Sections">
+    <a href="#m-listen" data-step="m-listen">S9 · Listening<span class="dot"></span></a>
+    <a href="#m-read" data-step="m-read">Reading<span class="dot"></span></a>
+    <a href="#m-analysis" data-step="m-analysis">Results<span class="dot"></span></a>
+    <a href="#m-speak" data-step="m-speak">S10 · Speaking<span class="dot"></span></a>
+    <a href="#m-write" data-step="m-write">Writing<span class="dot"></span></a>
+    <a href="#m-day" data-step="m-day">Exam day<span class="dot"></span></a>
+  </nav>
+</header>
+<main>
+<div class="hero">
+  <h1>Mock exam</h1>
+  <p class="lead">Two sessions, like the real 360 LPT. Session 9: Listening and Reading. Session 10: Speaking and Writing, and a plan for exam day.</p>
+  <div class="contrast">
+    <div class="s"><q>Listening + Reading</q><span>Session 9 · about 45 minutes, then your results by part.</span></div>
+    <div class="c"><q>Speaking + Writing</q><span>Session 10 · 4 speaking tasks and one e-mail in 20 minutes.</span></div>
+  </div>
+</div>
+
+<div class="part"><h2>Session 9 · Mock exam</h2><p>Listening · Reading · results and error analysis</p></div>
+
+<section class="block mock" id="m-listen" data-part="L"><div class="sec-head"><h2>Listening</h2><span class="kind">Mock exam</span></div>
+  <div class="audio-note">Audio isn't available in this browser. Your teacher will read the recordings aloud.</div>
+  <div class="paper"><b>Instructions</b><p style="margin:4px 0 0">You will hear each recording twice. Choose the best answer. A wrong answer doesn't lose points, so answer every question.</p></div>
+  <div class="bar"><button class="btn time" data-time="20">Start 20-min timer</button><label class="small">Audio speed <select id="rate"><option value="0.92">Normal</option><option value="0.78">Slower</option></select></label></div>
+  <h3 class="sub">Part 1 · Statement-Response</h3>
+  <p class="instr">Listen to the question or statement and choose the best response.</p>
+  <div data-ex="l_sr"></div>
+  <h3 class="sub">Part 2 · Short Conversations</h3>
+  <p class="instr">Listen to each conversation and answer the questions.</p>
+  <h4>Conversation 1</h4><div class="audio-row"><button class="play" data-audio="l_c1" aria-label="Play audio" aria-pressed="false">▶</button><span class="plays" data-count="l_c1">Not played yet</span></div><div data-ex="l_c1"></div><h4>Conversation 2</h4><div class="audio-row"><button class="play" data-audio="l_c2" aria-label="Play audio" aria-pressed="false">▶</button><span class="plays" data-count="l_c2">Not played yet</span></div><div data-ex="l_c2"></div><h4>Conversation 3</h4><div class="audio-row"><button class="play" data-audio="l_c3" aria-label="Play audio" aria-pressed="false">▶</button><span class="plays" data-count="l_c3">Not played yet</span></div><div data-ex="l_c3"></div>
+  <h3 class="sub">Part 3 · Short Talks</h3>
+  <p class="instr">Listen to each talk and answer the questions.</p>
+  <h4>Talk 1</h4><div class="audio-row"><button class="play" data-audio="l_t1" aria-label="Play audio" aria-pressed="false">▶</button><span class="plays" data-count="l_t1">Not played yet</span></div><div data-ex="l_t1"></div><h4>Talk 2</h4><div class="audio-row"><button class="play" data-audio="l_t2" aria-label="Play audio" aria-pressed="false">▶</button><span class="plays" data-count="l_t2">Not played yet</span></div><div data-ex="l_t2"></div>
+  <div class="bar"><button class="btn" data-finish="L">Finish Listening and see results</button></div>
+  <div class="results" id="res-L"></div>
+  <details class="after"><summary>Transcripts</summary><div class="script" data-script="l_c1"></div><div class="script" data-script="l_c2"></div><div class="script" data-script="l_c3"></div><div class="script" data-script="l_t1"></div><div class="script" data-script="l_t2"></div></details>
+</section>
+
+<section class="block mock" id="m-read" data-part="R"><div class="sec-head"><h2>Reading</h2><span class="kind">Mock exam</span></div>
+  <div class="paper"><b>Instructions</b><p style="margin:4px 0 0">You have 25 minutes for the three parts. Answer every question.</p></div>
+  <div class="bar"><button class="btn time" data-time="25">Start 25-min timer</button></div>
+  <h3 class="sub">Part 1 · Incomplete Sentences</h3>
+  <p class="instr">Choose the word or phrase that best completes the sentence.</p>
+  <div data-ex="r_is"></div>
+  <h3 class="sub">Part 2 · Gap Fill Texts</h3>
+  <p class="instr">Choose the best option for each gap.</p>
+  <div data-ex="r_gap"></div>
+  <h3 class="sub">Part 3 · Text Comprehension</h3>
+  <p class="instr">Read the text and answer the questions.</p>
+  <div class="email"><div class="hdr"><b>From:</b> Customer Service, BlueSky Telecom<br><b>To:</b> Andrew Collins<br><b>Subject:</b> Your new contract</div><p>Dear Mr Collins,</p><p>Thank you for choosing BlueSky Telecom. We are writing to confirm the details of your new contract, which starts on 1 December.</p><p>Your new plan includes unlimited calls and 50 GB of data per month for €29.99. This is €5 cheaper than your old plan, and you will now get twice as much data.</p><p>Your new SIM card will arrive by post in the next five working days. Please do not use it before 1 December, as your old card will continue working until 30 November. After that date, you will need to activate the new card on our website or by calling 900 123 456.</p><p>If you have any questions, our customer service team is available from Monday to Saturday, 8 a.m. to 10 p.m.</p><p>Kind regards,<br>Rachel Lewis<br>Customer Service Team</p></div>
+  <div style="height:12px"></div>
+  <div data-ex="r_tc"></div>
+  <div class="bar"><button class="btn" data-finish="R">Finish Reading and see results</button></div>
+  <div class="results" id="res-R"></div>
+</section>
+
+<section class="block" id="m-analysis"><div class="sec-head"><h2>After the mock</h2><span class="kind">Error analysis</span></div>
+  <p class="instr">Look at your results. For each area below 60%, write one thing you will study before session 11.</p>
+  <div class="results" id="res-all"><p class="small">Finish both parts to see your summary.</p></div>
+  <div class="paper"><b>My plan</b>
+    <label for="plan1" class="small">Area I need to improve</label><textarea id="plan1" style="min-height:70px" placeholder="For example: phrasal verbs"></textarea>
+    <label for="plan2" class="small">What I'm going to do</label><textarea id="plan2" style="min-height:70px" placeholder="For example: repeat the session 7 exercises and learn 10 phrasal verbs"></textarea>
+  </div>
+</section>
+
+<div class="part"><h2>Session 10 · Mock exam</h2><p>Speaking · Writing · exam day</p></div>
+
+<section class="block" id="m-speak"><div class="sec-head"><h2>Speaking</h2><span class="kind">Mock exam · four tasks</span></div>
+  <div class="paper"><b>Instructions</b><p style="margin:4px 0 0">Record yourself on your phone, like in the exam. Do the four tasks without stopping. Speak until the time finishes.</p></div>
+  <h3 class="sub">1 · Warm Up (1–2 minutes)</h3>
+  <div class="prompt"><ul><li>Talk about your personal details (What's your name? Where are you from? Where do you live? How long have you lived there?)</li><li>Talk about your occupation (What do you do? Where do you work or study?)</li><li>Talk about your interests (What do you do in your free time? How often?)</li><li>Talk about your routines (What do you do on a typical day? What did you do last weekend? What are your plans for the future?)</li></ul></div>
+  <div class="bar"><button class="btn time" data-time="2">Start 2-min timer</button></div>
+  <h3 class="sub">2 · Reading Aloud (30 seconds to prepare)</h3>
+  <div class="email"><p>Good morning, and welcome to the Annual Sales Conference. Before we begin, I'd like to give you some practical information. Today's programme has three parts. The first session starts at 9:30 in the Main Hall and finishes at 11:15. After a short coffee break, we will divide into four groups for the workshops. Lunch will be served at 1 p.m. in the restaurant on the second floor. Please remember to wear your name badge at all times and to switch off your mobile phone during the presentations. If you need any help, our staff in the green T-shirts will be happy to help you. We hope you have a productive and enjoyable day.</p></div>
+  <div class="bar"><button class="btn time" data-time="1">Start 1-min timer</button></div>
+  <details class="after"><summary>Listen to a model (after you read)</summary><div class="audio-row"><button class="play" data-audio="s_read" aria-label="Play audio" aria-pressed="false">▶</button><span class="plays" data-count="s_read">Not played yet</span></div></details>
+  <h3 class="sub">3 · Picture Description (45–60 seconds)</h3>
+  <figure class="pic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" role="img" aria-label="A park: a woman reading on a bench under a tree, an old man feeding birds on another bench, a man running on the path, two children playing football, and a man selling ice creams in a kiosk.">
+  <rect x="0" y="0" width="1200" height="640" fill="#DCEBF8"/>
+  <circle cx="1100" cy="70" r="40" fill="#FFE29A"/>
+  <ellipse cx="300" cy="70" rx="70" ry="20" fill="#FFFFFF"/><ellipse cx="340" cy="58" rx="45" ry="20" fill="#FFFFFF"/>
+  <!-- distant hills and trees -->
+  <ellipse cx="300" cy="300" rx="420" ry="90" fill="#9CCB86"/>
+  <ellipse cx="950" cy="300" rx="380" ry="80" fill="#A8D392"/>
+  <circle cx="620" cy="235" r="36" fill="#5BAA6A"/><circle cx="680" cy="245" r="28" fill="#4E9A5D"/>
+  <circle cx="840" cy="240" r="32" fill="#5BAA6A"/>
+  <!-- grass -->
+  <rect x="0" y="290" width="1200" height="350" fill="#8CC77A"/>
+  <!-- path -->
+  <path d="M520 290 Q560 360 470 430 Q380 510 430 640 L650 640 Q600 520 680 440 Q760 360 640 290 Z" fill="#E8DCC2"/>
+
+  <!-- big tree behind bench 1 -->
+  <rect x="150" y="150" width="34" height="250" fill="#7A5634"/>
+  <circle cx="167" cy="130" r="95" fill="#3AA46A"/>
+  <circle cx="100" cy="170" r="60" fill="#2E8B57"/>
+  <circle cx="235" cy="165" r="62" fill="#2E8B57"/>
+
+  <!-- ice-cream kiosk (right, background) -->
+  <rect x="930" y="250" width="180" height="120" fill="#FFFFFF" stroke="#C3CAD6" stroke-width="3"/>
+  <path d="M915 250 L1125 250 L1110 215 L930 215 Z" fill="#D98A26"/>
+  <rect x="950" y="275" width="140" height="55" fill="#BFE0F5"/>
+  <circle cx="1110" cy="205" r="0" fill="none"/>
+  <!-- ice-cream sign -->
+  <path d="M1020 160 L1006 196 L1034 196 Z" fill="#E6B57A"/>
+  <circle cx="1020" cy="156" r="14" fill="#F2A7C3"/>
+  <rect x="1017" y="196" width="6" height="20" fill="#5A6678"/>
+  <!-- seller in kiosk window -->
+  <rect x="1000" y="300" width="44" height="40" rx="12" fill="#2B57C4"/>
+  <circle cx="1022" cy="290" r="16" fill="#E8B892"/>
+  <path d="M1006 286 Q1008 270 1022 270 Q1036 270 1038 286 Q1030 280 1022 280 Q1014 280 1006 286 Z" fill="#3B2A20"/>
+  <rect x="930" y="330" width="180" height="40" fill="#FFFFFF" stroke="#C3CAD6" stroke-width="3"/>
+
+  <!-- jogger (middle, background, on the path) -->
+  <g transform="translate(575,0)">
+    <path d="M-4 330 L-18 362 L-30 372" stroke="#1E2A4A" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M4 330 L16 356 L30 360" stroke="#1E2A4A" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <rect x="-14" y="280" width="28" height="54" rx="10" fill="#B3261E"/>
+    <path d="M-10 292 L-26 312" stroke="#B3261E" stroke-width="8" stroke-linecap="round"/>
+    <path d="M10 292 L24 278" stroke="#B3261E" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="0" cy="266" r="13" fill="#8D5A3B"/>
+    <path d="M-13 262 Q-12 250 0 250 Q12 250 13 262 Q6 256 0 256 Q-6 256 -13 262 Z" fill="#1E1A17"/>
+  </g>
+
+  <!-- bench 1 with woman reading -->
+  <rect x="60" y="440" width="230" height="16" rx="4" fill="#8C6440"/>
+  <rect x="60" y="400" width="230" height="12" rx="4" fill="#8C6440"/>
+  <rect x="60" y="418" width="230" height="12" rx="4" fill="#8C6440"/>
+  <rect x="78" y="456" width="10" height="50" fill="#5A6678"/><rect x="262" y="456" width="10" height="50" fill="#5A6678"/>
+  <rect x="140" y="430" width="10" height="70" fill="#5A6678" transform="rotate(4 145 430)"/>
+  <rect x="170" y="430" width="10" height="70" fill="#5A6678" transform="rotate(-4 175 430)"/>
+  <rect x="132" y="430" width="70" height="18" rx="8" fill="#5A6678"/>
+  <rect x="128" y="360" width="50" height="80" rx="18" fill="#9B5DB5"/>
+  <rect x="168" y="392" width="34" height="26" rx="2" fill="#FFFFFF" stroke="#2B57C4" stroke-width="3"/>
+  <line x1="185" y1="392" x2="185" y2="418" stroke="#2B57C4" stroke-width="2"/>
+  <path d="M168 380 Q182 392 176 404" stroke="#9B5DB5" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <path d="M133 340 Q132 314 156 314 Q180 316 178 338 L180 368 L136 366 Z" fill="#B5651D"/>
+  <circle cx="157" cy="340" r="21" fill="#E8B892"/>
+  <path d="M136 334 Q138 316 157 316 Q176 316 178 334 Q168 324 157 324 Q146 324 136 334 Z" fill="#B5651D"/>
+  <circle cx="164" cy="342" r="2.5" fill="#1E2A4A"/>
+
+  <!-- bench 2 with old man feeding birds -->
+  <rect x="320" y="470" width="190" height="16" rx="4" fill="#8C6440"/>
+  <rect x="320" y="432" width="190" height="12" rx="4" fill="#8C6440"/>
+  <rect x="320" y="450" width="190" height="12" rx="4" fill="#8C6440"/>
+  <rect x="336" y="486" width="10" height="50" fill="#5A6678"/><rect x="484" y="486" width="10" height="50" fill="#5A6678"/>
+  <rect x="380" y="462" width="66" height="18" rx="8" fill="#7D879A"/>
+  <rect x="392" y="462" width="10" height="66" fill="#7D879A"/><rect x="422" y="462" width="10" height="66" fill="#7D879A"/>
+  <ellipse cx="398" cy="530" rx="12" ry="5" fill="#3B2A20"/><ellipse cx="428" cy="530" rx="12" ry="5" fill="#3B2A20"/>
+  <rect x="384" y="392" width="50" height="80" rx="18" fill="#7D5A3C"/>
+  <path d="M430 410 Q460 430 470 452" stroke="#7D5A3C" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <circle cx="472" cy="456" r="7" fill="#E8B892"/>
+  <circle cx="409" cy="370" r="21" fill="#E8B892"/>
+  <path d="M388 366 Q390 350 409 349 Q428 350 430 366 Q420 358 409 358 Q398 358 388 366 Z" fill="#E9EDF3"/>
+  <rect x="394" y="344" width="30" height="8" rx="3" fill="#5A6678"/>
+  <!-- birds and crumbs -->
+  <circle cx="486" cy="500" r="2" fill="#E6B57A"/><circle cx="500" cy="508" r="2" fill="#E6B57A"/><circle cx="476" cy="512" r="2" fill="#E6B57A"/>
+  <g fill="#7D879A"><ellipse cx="520" cy="530" rx="16" ry="9"/><circle cx="532" cy="522" r="7"/>
+  <ellipse cx="470" cy="548" rx="16" ry="9"/><circle cx="458" cy="540" r="7"/>
+  <ellipse cx="540" cy="556" rx="16" ry="9"/><circle cx="552" cy="548" r="7"/></g>
+  <g fill="#D98A26"><path d="M538 521 L546 523 L538 525 Z"/><path d="M452 539 L444 541 L452 543 Z"/><path d="M558 547 L566 549 L558 551 Z"/></g>
+
+  <!-- two children playing football (right, foreground) -->
+  <g transform="translate(820,0)">
+    <rect x="0" y="470" width="14" height="70" rx="6" fill="#1E2A4A" transform="rotate(10 7 470)"/>
+    <rect x="20" y="470" width="14" height="70" rx="6" fill="#1E2A4A" transform="rotate(-25 27 470)"/>
+    <rect x="-4" y="410" width="42" height="66" rx="14" fill="#1E7A5A"/>
+    <path d="M0 424 L-18 450" stroke="#1E7A5A" stroke-width="10" stroke-linecap="round"/>
+    <path d="M34 424 L52 444" stroke="#1E7A5A" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="17" cy="390" r="19" fill="#8D5A3B"/>
+    <path d="M-1 388 Q0 370 17 370 Q34 370 35 388 Q27 380 17 380 Q7 380 -1 388 Z" fill="#1E1A17"/>
+  </g>
+  <circle cx="905" cy="560" r="16" fill="#FFFFFF" stroke="#1E2A4A" stroke-width="3"/>
+  <path d="M899 552 L911 552 L914 563 L905 570 L896 563 Z" fill="#1E2A4A"/>
+  <g transform="translate(990,0)">
+    <rect x="0" y="480" width="14" height="66" rx="6" fill="#5A6678" transform="rotate(-6 7 480)"/>
+    <rect x="22" y="480" width="14" height="66" rx="6" fill="#5A6678" transform="rotate(8 29 480)"/>
+    <rect x="-4" y="418" width="44" height="66" rx="14" fill="#D98A26"/>
+    <path d="M0 432 L-20 412" stroke="#D98A26" stroke-width="10" stroke-linecap="round"/>
+    <path d="M36 432 L56 412" stroke="#D98A26" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="18" cy="398" r="19" fill="#E8B892"/>
+    <path d="M0 398 Q0 376 18 376 Q36 376 36 398 Q30 386 18 386 Q6 386 0 398 Z" fill="#E7C66B"/>
+  </g>
+</svg>
+</figure>
+  <div class="bar"><button class="btn time" data-time="1">Start 1-min timer</button></div>
+  <details><summary>Model description</summary><div class="email"><p>In this picture I can see a park on a sunny day. <span class="v-pp">There are</span> six people. On the left, a woman <span class="v-pc">is sitting</span> on a bench <span class="v-pp">under</span> a tree. She<span class="v-pc">'s reading</span> a book. <span class="v-pp">Next to</span> her, <span class="v-pp">on another bench</span>, an old man <span class="v-pc">is feeding</span> some birds. In the middle, in the background, a man <span class="v-pc">is running</span> <span class="v-pp">along</span> the path. I think he<span class="v-pc">'s training</span> for a race. On the right, two children <span class="v-pc">are playing</span> football on the grass, and <span class="v-pp">behind</span> them <span class="v-pp">there's</span> an ice-cream kiosk. A man <span class="v-pc">is selling</span> ice creams there. It looks like a relaxing weekend afternoon.</p><p class="small"><span class="v-pp">■</span> there is / are + prepositions · <span class="v-pc">■</span> present continuous</p></div></details>
+  <h3 class="sub">4 · Extended Conversation (about 1½ minutes)</h3>
+  <p class="task">Look at this information comparing two places for a weekend trip. Which one would you prefer? Give reasons for your answer. Then talk about your last holiday. Where did you go? What did you do?</p>
+  <div class="cols" style="margin-top:12px">
+    <div class="paper"><b>Beach apartment · Torrevieja</b><p style="margin:4px 0 0">2 minutes from the beach. Swimming pool. Restaurants and nightlife nearby. Busy in summer. €140 for two nights.</p></div>
+    <div class="paper"><b>Mountain cabin · Sierra de Aitana</b><p style="margin:4px 0 0">Quiet, in the middle of the forest. Walking routes and a lake. No restaurants: you cook. 1 hour by car from the nearest town. €110 for two nights.</p></div>
+  </div>
+  <div class="bar"><button class="btn time" data-time="2">Start 2-min timer</button></div>
+  <details><summary>Model answer</summary><div class="email"><p>I'd prefer the mountain cabin. It's <span class="v-pc">cheaper than</span> the beach apartment, and it's <span class="v-pc">much quieter</span>, so I think it's <span class="v-pc">better for</span> relaxing after a busy week. I love walking, and the routes and the lake look great. The beach apartment is <span class="v-pc">more convenient</span>, because there are restaurants nearby, but it's very busy in summer and I don't like crowds. My last holiday <span class="v-pp">was in August</span>. I <span class="v-pp">went</span> to Galicia with two friends. We <span class="v-pp">stayed</span> in a small village near the coast, we <span class="v-pp">walked</span> a lot and we <span class="v-pp">ate</span> a lot of fish. It <span class="v-pp">was fantastic</span>, although it <span class="v-pp">rained</span> for two days.</p><p class="small"><span class="v-pc">■</span> comparatives · <span class="v-pp">■</span> past simple</p></div></details>
+  <h3 class="sub">Speaking sheet (teacher or partner)</h3>
+  <div class="paper table-wrap"><table><tr><th></th><th>What to listen for</th><th>Score</th></tr><tr><td><b>Fluency</b></td><td>Speaks without long silences; uses rescue phrases.</td><td>1 · 2 · 3 · 4</td></tr><tr><td><b>Task</b></td><td>Answers every part of each task.</td><td>1 · 2 · 3 · 4</td></tr><tr><td><b>Grammar</b></td><td>Different tenses, mostly correct.</td><td>1 · 2 · 3 · 4</td></tr><tr><td><b>Vocabulary</b></td><td>Enough words for the topic; some variety.</td><td>1 · 2 · 3 · 4</td></tr><tr><td><b>Pronunciation</b></td><td>Easy to understand; numbers and -ed endings clear.</td><td>1 · 2 · 3 · 4</td></tr></table></div>
+</section>
+
+<section class="block" id="m-write"><div class="sec-head"><h2>Writing</h2><span class="kind">Mock exam · 20 minutes</span></div>
+  <p class="task">Read the following e-mail and write a reply as if you are Laura Martín, the customer service manager of SportZone. Make sure you provide all the information that Kevin Hart requests. (Min. 150 words)</p>
+  <div class="email"><div class="hdr"><b>To:</b> Laura Martín &lt;customerservice@sportzone.com&gt;<br><b>From:</b> Kevin Hart &lt;k.hart@hmail.com&gt;<br><b>Subject:</b> Wrong size – order 7712</div><p>Dear Ms Martín,</p><p>Ten days ago I ordered a pair of running shoes from your website (order 7712). They arrived yesterday, but they are a size 42 and I ordered a size 44.</p><p>Could you tell me how I can return them, and if I have to pay for the shipping? I would also like to know when I will receive the correct size. I need them for a half marathon next Sunday.</p><p>Finally, as this was your mistake, is it possible to have a discount?</p><p>I look forward to your reply.</p><p>Kevin Hart</p></div>
+  <div class="bar"><button class="btn time" data-time="20">Start 20-min timer (exam time)</button><span>Words: <span class="wc low" data-wc-for="w10" data-target="150">0</span> / 150</span></div>
+  <label for="w10-ta" class="small">Write here (nothing is saved — copy your text before closing).</label>
+  <textarea id="w10-ta" data-wc="w10" spellcheck="false" placeholder="Dear Mr Hart,"></textarea>
+  <h3 class="sub">After 20 minutes: check</h3>
+  <div class="cols">
+    <div class="paper"><b>Did you answer everything?</b><ul class="checklist"><li><input type="checkbox" id="w10c0"><label for="w10c0">How can he return the shoes?</label></li><li><input type="checkbox" id="w10c1"><label for="w10c1">Does he have to pay for shipping?</label></li><li><input type="checkbox" id="w10c2"><label for="w10c2">When will he receive the correct size?</label></li><li><input type="checkbox" id="w10c3"><label for="w10c3">Can he have a discount?</label></li></ul></div>
+    <div class="paper"><b>Peer check</b><ul class="checklist"><li><input type="checkbox" id="w10p0"><label for="w10p0">It answers the four questions (return, shipping, delivery date, discount).</label></li><li><input type="checkbox" id="w10p1"><label for="w10p1">It has a formal greeting, paragraphs and a formal closing.</label></li><li><input type="checkbox" id="w10p2"><label for="w10p2">It apologises and uses different tenses.</label></li><li><input type="checkbox" id="w10p3"><label for="w10p3">It uses connectors (because, so, as).</label></li><li><input type="checkbox" id="w10p4"><label for="w10p4">It has at least 150 words.</label></li></ul></div>
+  </div>
+  <details><summary>Model answer</summary><div class="email"><p>Dear Mr Hart,</p><p>Thank you for your email, and <span class="v-pp">I am very sorry that</span> you received the wrong size. <span class="v-pc">I have checked</span> your order, and you are right: our warehouse sent a size 42 instead of a size 44.</p><p>Returning the shoes is very easy. You don't have to pay anything, <span class="v-pp">because</span> we will send a courier to your home to collect them. <span class="v-pp">Could you tell me</span> which day is best for you? The courier can come any day from Monday to Friday, between 9 a.m. and 6 p.m.</p><p>We sent your new shoes this morning by express delivery<span class="v-pp">, so </span>you will receive them on Thursday at the latest. <span class="v-pp">That means</span> you will have them before your half marathon.</p><p><span class="v-pp">As an apology</span> for our mistake, we are happy to give you a 20% discount. <span class="v-pc">We have already refunded</span> the money to your card, and you will see it in three to five days.</p><p>Good luck in the race! If you have any other questions, <span class="v-pp">please do not hesitate to contact me</span>.</p><p>Kind regards,<br>Laura Martín<br>Customer Service Manager, SportZone</p><p class="small"><span class="v-pp">■</span> formal phrases and connectors · <span class="v-pc">■</span> present perfect</p></div></details>
+</section>
+
+<section class="block" id="m-day"><div class="sec-head"><h2>Exam day</h2><span class="kind">Strategy</span></div>
+  <div class="traps"><div class="trap"><b>Before the exam</b><ul style="margin:6px 0 0;padding-left:18px"><li>Sleep well and arrive early.</li><li>Bring everything your exam centre asks for.</li><li>Test your headphones and microphone before you start.</li></ul></div><div class="trap"><b>Listening</b><ul style="margin:6px 0 0;padding-left:18px"><li>Read the options before each audio.</li><li>Never leave an answer blank: a wrong answer doesn't lose points.</li><li>If you miss one, choose and move on.</li></ul></div><div class="trap"><b>Reading</b><ul style="margin:6px 0 0;padding-left:18px"><li>Look at the timer: about 8 minutes per part.</li><li>Incomplete Sentences: find the clue word first.</li><li>Text Comprehension: questions 1 and 2 are usually text type and purpose.</li></ul></div><div class="trap"><b>Speaking</b><ul style="margin:6px 0 0;padding-left:18px"><li>Speak until the time finishes. Silence is worse than mistakes.</li><li>Use rescue phrases: Let me think… / In other words…</li><li>Picture: there is / prepositions / present continuous.</li></ul></div><div class="trap"><b>Writing</b><ul style="margin:6px 0 0;padding-left:18px"><li>3 minutes to plan, 14 to write, 3 to check.</li><li>Tick every point in the e-mail.</li><li>Count your words: 150 or more.</li></ul></div><div class="trap"><b>Remember</b><ul style="margin:6px 0 0;padding-left:18px"><li>The exam is multilevel: some questions are B2 or C1. Don't panic.</li><li>Every answer counts for your level.</li></ul></div></div>
+</section>
+<footer>Inglés 360 LPT · CAPMAN · Simulacro con el formato del examen 360 LPT · Sesiones 9 y 10</footer>
+</main>
+<script>
+(function(){
+"use strict";
+var EX = {"l_sr":{"type":"sr","items":[{"say":"Where did you put the delivery notes?","opts":["Tomorrow morning.","Yes, I delivered them.","In the top drawer of my desk."],"a":2,"why":"Where → a place."},{"say":"How long does the training course last?","opts":["Two days.","It starts at nine.","It's very long."],"a":0,"why":"How long → a duration. B answers “when”."},{"say":"Would you like a coffee?","opts":["I'd like to work here.","No, thanks. I've just had one.","Yes, I like it."],"a":1,"why":"No, thanks… is a polite answer to an offer."},{"say":"Who's going to collect the visitors from the airport?","opts":["The airport is very busy.","At three o'clock.","Javier is, I think."],"a":2,"why":"Who → a person. B answers “when”."},{"say":"Why didn't you come to the meeting?","opts":["Because I had a problem with my car.","I came by train.","It's in Room 2."],"a":0,"why":"Why → Because…"},{"say":"Have you finished the sales report?","opts":["Yes, I'm finishing it tomorrow.","The sales were good.","Not yet, but I'll send it this afternoon."],"a":2,"why":"“Not yet” + will. A contradicts itself."},{"say":"Do you mind if I leave a bit early today?","opts":["No, that's fine.","I left at six.","Yes, please leave."],"a":0,"why":"Do you mind…? → “No” = you can."},{"say":"Which printer should I use?","opts":["The one next to the window works best.","Print two copies.","Yes, you should."],"a":0,"why":"Which → a choice: the one…"},{"say":"The client wants to change the date of the meeting.","opts":["Again? OK, I'll call her.","The client is very nice.","It's on the 15th."],"a":0,"why":"A natural reaction. C and B don't answer."},{"say":"How often do you check the stock?","opts":["In the warehouse.","Every Monday morning.","About 200 boxes."],"a":1,"why":"How often → frequency. C answers “how many”."}]},"r_is":{"type":"select","items":[{"t":"The meeting room ___ on the second floor.","opts":["have","is","has","are"],"a":1,"cat":"Tenses","why":"Singular → is."},{"t":"She ___ in the marketing department since 2021.","opts":["is working","works","worked","has worked"],"a":3,"cat":"Tenses","why":"since + continues now → present perfect."},{"t":"I ___ the invoice yesterday, so you should receive it soon.","opts":["have sent","sent","send","am sending"],"a":1,"cat":"Tenses","why":"yesterday → past simple."},{"t":"___ you tell me where the reception is, please?","opts":["Must","Could","Should","Have"],"a":1,"cat":"Modals and requests","why":"Polite request → Could you…?"},{"t":"This printer is ___ than the old one.","opts":["fastest","faster","more fast","fast"],"a":1,"cat":"Comparatives","why":"than → comparative: faster."},{"t":"We are interested ___ your new products.","opts":["at","for","in","on"],"a":2,"cat":"Prepositions and vocabulary","why":"interested in."},{"t":"Please ___ this form before the interview.","opts":["fall in","fill on","fill in","full in"],"a":2,"cat":"Prepositions and vocabulary","why":"fill in = complete a form."},{"t":"___ it was raining, the event was a great success.","opts":["Although","Because","Despite","However"],"a":0,"cat":"Connectors","why":"Although + sentence. (Despite + noun.)"},{"t":"Visitors ___ park in the director's space.","opts":["don't have to","hasn't","doesn't","mustn't"],"a":3,"cat":"Modals and requests","why":"Forbidden → mustn't."},{"t":"I ___ a mistake in the last order.","opts":["took","made","did","had"],"a":1,"cat":"Prepositions and vocabulary","why":"make a mistake."},{"t":"By the time we arrived, the meeting ___.","opts":["had already started","is already starting","has already started","already starts"],"a":0,"cat":"Higher level (B1+/B2)","why":"An action before another past action → past perfect."},{"t":"If we ___ the contract today, we will start next week.","opts":["signed","sign","would sign","will sign"],"a":1,"cat":"Higher level (B1+/B2)","why":"First conditional: If + present, will + verb."},{"t":"The new software ___ by our IT team last month.","opts":["has installed","is installing","installed","was installed"],"a":3,"cat":"Higher level (B1+/B2)","why":"Passive (by our IT team) + last month → was installed."},{"t":"The candidate ___ we interviewed yesterday has accepted the job.","opts":["whose","what","who","which"],"a":2,"cat":"Higher level (B1+/B2)","why":"Relative pronoun for people → who."},{"t":"I'm not used to ___ so early.","opts":["got up","get up","be getting up","getting up"],"a":3,"cat":"Higher level (B1+/B2)","why":"be used to + -ing."}]},"r_gap":{"type":"gap","texts":[{"html":"<p class='qtitle'>Memo</p><p><b>To:</b> All staff</p><p><b>From:</b> Pablo Ruiz, Facilities Manager</p><p><b>Subject:</b> New parking rules</p><p>From next Monday, all employees [[0]] a parking card to enter the car park. You can [[1]] your card from reception between 9 a.m. and 2 p.m. Please note that the first floor of the car park is [[2]] for visitors. If you [[3]] your card, please tell reception immediately, [[4]] we will have to cancel it.</p>","gaps":[{"opts":["needing","will need","needs","needed"],"a":1,"why":"From next Monday → future: will need."},{"opts":["collect","to collect","collecting","collected"],"a":0,"why":"can + base form."},{"opts":["only","alone","single","lonely"],"a":0,"why":"only for visitors = not for employees."},{"opts":["will lose","lost","losing","lose"],"a":3,"why":"First conditional: If + present."},{"opts":["however","so","because","although"],"a":2,"why":"Reason → because."}]},{"html":"<p class='qtitle'>Advertisement</p><p><b>EasyEnglish – learn at your own speed</b></p><p>Are you looking for a [[0]] flexible way to learn English? At EasyEnglish we offer online classes [[1]] qualified teachers seven days a week. More than 5,000 students [[2]] our courses since 2020. [[3]] today and get your first class [[4]]!</p>","gaps":[{"opts":["more","many","most","much"],"a":0,"why":"a + comparative: a more flexible way."},{"opts":["by","of","with","on"],"a":2,"why":"classes with teachers."},{"opts":["are taking","have taken","take","took"],"a":1,"why":"since 2020 → present perfect."},{"opts":["Sign out","Sign off","Sign of","Sign up"],"a":3,"why":"sign up = register for something."},{"opts":["freely","to free","for free","at free"],"a":2,"why":"for free = without paying."}]}]},"r_tc":{"type":"mc","items":[{"q":"What kind of text is this?","opts":["An e-mail","An advertisement","A memo","A formal letter"],"a":0,"why":"From / To / Subject → an e-mail."},{"q":"What is the purpose of the text?","opts":["To complain about a service","To advertise a new phone","To ask for a payment","To confirm the details of a new contract"],"a":3,"why":"“We are writing to confirm the details of your new contract.”"},{"q":"How is the new plan different from the old one?","opts":["It doesn't include calls.","It's cheaper and has more data.","It's more expensive but has more data.","It has the same amount of data."],"a":1,"why":"“€5 cheaper… twice as much data.”"},{"q":"When should Mr Collins start using the new SIM card?","opts":["On 1 December","In five working days","On 30 November","As soon as it arrives"],"a":0,"why":"“Please do not use it before 1 December.”"},{"q":"How can he activate the card?","opts":["On the website or by phone","By post","Only by phone","In a BlueSky shop"],"a":0,"why":"“…on our website or by calling 900 123 456.”"},{"q":"Which word in the text means “to make something start working”?","opts":["continue","arrive","confirm","activate"],"a":3,"why":"activate = make it start working."}]},"l_c1":{"type":"mc","items":[{"q":"Why does the man call?","opts":["To cancel his booking","To change the type of room","To book a table","To ask for the price"],"a":1,"why":"“…I'd like to change it to a room with two beds.”"},{"q":"What is true about the new room?","opts":["It's bigger.","It's on the top floor.","It's more expensive.","It's cheaper."],"a":3,"why":"“…it's ten euros cheaper per night.”"}]},"l_c2":{"type":"mc","items":[{"q":"Why might the woman not go to the party?","opts":["She has work to finish.","She doesn't like parties.","She is ill.","She's going on holiday."],"a":0,"why":"“…I have to finish the budget…”"},{"q":"What will she probably do?","opts":["Stay at the party all night","Go to the party for a short time","Work on Saturday","Visit Ana in Valencia"],"a":1,"why":"“Maybe I'll go to the party for an hour.”"}]},"l_c3":{"type":"mc","items":[{"q":"What is the problem with the jacket?","opts":["The zip doesn't work.","It's the wrong colour.","It's dirty.","It's too expensive."],"a":0,"why":"“…the zip is broken.”"},{"q":"What does the woman decide?","opts":["To change it for a smaller size","To get her money back","To buy a second jacket","To come back next week"],"a":0,"why":"“Is there a new one in a medium? This is a large…”"}]},"l_t1":{"type":"mc","items":[{"q":"Why is the flight delayed?","opts":["A technical problem","There are too many passengers","Bad weather in London","The crew is late"],"a":2,"why":"“Because of bad weather in London…”"},{"q":"Where will the flight leave from?","opts":["Gate B22","Gate B20","Gate A22","Gate A14"],"a":0,"why":"“…from gate B22 instead of gate A14.” B20 is the café — a trap."},{"q":"What can passengers get at the café?","opts":["A hotel room","A discount on the next flight","A new boarding pass","A free drink and a sandwich"],"a":3,"why":"“…a free drink and a sandwich at the café…”"}]},"l_t2":{"type":"mc","items":[{"q":"How did Marta start her company?","opts":["With her sister, at home","With forty employees","With a bank loan","In an office in Murcia"],"a":0,"why":"“…just me and my sister, and we worked from my kitchen.”"},{"q":"What was the most difficult thing?","opts":["Learning English","Finding good workers","Paying the rent","Finding customers"],"a":1,"why":"“The most difficult thing was finding good workers.”"},{"q":"What are Marta's plans for next year?","opts":["To start English classes","To sell the company","To open an office in Valencia","To hire her sister"],"a":2,"why":"“Next year we're going to open a new office in Valencia.”"}]}};
+var AUDIO = {"l_c1":[{"w":"A","t":"Good afternoon, Harbour Hotel. How can I help you?"},{"w":"B","t":"Hi. I booked a double room for this weekend, but I'd like to change it to a room with two beds. My son is coming with me."},{"w":"A","t":"Let me check… Yes, we have a twin room available, but it's on the ground floor and it's a little smaller. Is that OK?"},{"w":"B","t":"That's fine. Is the price the same?"},{"w":"A","t":"Actually, it's ten euros cheaper per night."},{"w":"B","t":"Great, thanks."}],"l_c2":[{"w":"B","t":"Are you coming to Ana's leaving party on Friday?"},{"w":"A","t":"I'd love to, but I have to finish the budget for the new project. The director wants it on Monday."},{"w":"B","t":"Can't you finish it on Saturday?"},{"w":"A","t":"No, I'm visiting my parents in Valencia this weekend. Maybe I'll go to the party for an hour after work."}],"l_c3":[{"w":"A","t":"Excuse me, I bought this jacket here last week, but the zip is broken."},{"w":"B","t":"Oh, I'm sorry. Do you have the receipt?"},{"w":"A","t":"Yes, here it is."},{"w":"B","t":"Thank you. Would you like a new one, or would you prefer your money back?"},{"w":"A","t":"Is there a new one in a medium? This is a large, and it's a bit big for me."},{"w":"B","t":"Let me check. Yes, we've got one in medium."}],"l_t1":[{"w":"A","t":"Good morning, passengers. This is an announcement for passengers on flight I B thirty-one fifty to London. Because of bad weather in London, the flight is delayed by about two hours. The new departure time is eleven forty-five. The gate has also changed: the flight will now leave from gate B twenty-two instead of gate A fourteen. Passengers can collect a free drink and a sandwich at the café next to gate B twenty. Please show your boarding pass. We apologise for the delay and thank you for your patience."}],"l_t2":[{"w":"A","t":"Hi, I'm Marta, and I started my own cleaning company eight years ago. At the beginning, it was just me and my sister, and we worked from my kitchen. Now we have forty employees and offices in Alicante and Murcia. The most difficult thing was finding good workers, so we decided to pay our staff more than other companies and to offer free English classes. People like working here, and that's why they stay. Next year we're going to open a new office in Valencia, and I'm really excited about it."}],"s_read":[{"w":"A","t":"Good morning, and welcome to the Annual Sales Conference. Before we begin, I'd like to give you some practical information. Today's programme has three parts. The first session starts at nine thirty in the Main Hall and finishes at eleven fifteen. After a short coffee break, we will divide into four groups for the workshops. Lunch will be served at one p.m. in the restaurant on the second floor. Please remember to wear your name badge at all times and to switch off your mobile phone during the presentations. If you need any help, our staff in the green T-shirts will be happy to help you. We hope you have a productive and enjoyable day."}]};
+var NAMES = {"l_c1":{"A":"Receptionist","B":"Guest"},"l_c2":{"A":"Elena","B":"Pablo"},"l_c3":{"A":"Customer","B":"Shop assistant"},"l_t1":{"A":"Announcer"},"l_t2":{"A":"Marta"},"s_read":{"A":"Speaker"}};
+var SHOWTEXT = {"l_t1":"Good morning, passengers. This is an announcement for passengers on flight IB 3150 to London. Because of bad weather in London, the flight is delayed by about two hours. The new departure time is 11:45. The gate has also changed: the flight will now leave from gate B22 instead of gate A14. Passengers can collect a free drink and a sandwich at the café next to gate B20. Please show your boarding pass. We apologise for the delay and thank you for your patience.","l_t2":"Hi, I'm Marta, and I started my own cleaning company eight years ago. At the beginning, it was just me and my sister, and we worked from my kitchen. Now we have forty employees and offices in Alicante and Murcia. The most difficult thing was finding good workers, so we decided to pay our staff more than other companies and to offer free English classes. People like working here, and that's why they stay. Next year we're going to open a new office in Valencia, and I'm really excited about it."};
+var PARTS = {"L":{"name":"Listening","ex":[["l_sr","Statement-Response"],["l_c1","Short Conversations"],["l_c2","Short Conversations"],["l_c3","Short Conversations"],["l_t1","Short Talks"],["l_t2","Short Talks"]]},"R":{"name":"Reading","ex":[["r_is","cat"],["r_gap","Gap Fill"],["r_tc","Text Comprehension"]]}};
+var USES = [];
+/* ===================== HELPERS ===================== */
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function sel(k,opts){
+  var h='<select data-k="'+k+'" aria-label="Choose an option"><option value="">-----</option>';
+  opts.forEach(function(o,i){h+='<option value="'+i+'">'+o+'</option>'});
+  return h+'</select>';
+}
+function radios(k,opts){
+  var h='<div class="opts" role="radiogroup">';
+  opts.forEach(function(o,i){h+='<label class="opt" data-o="'+i+'"><input type="radio" name="'+k+'" value="'+i+'"><span>'+o+'</span></label>'});
+  return h+'</div>';
+}
+function card(n,inner,k){return '<div class="q" id="q-'+k+'"><span class="qn">'+n+'</span>'+inner+'<div class="fb" id="fb-'+k+'"></div></div>'}
+
+var STATE = {};
+var SAY = {};
+
+function mount(id){
+  var ex=EX[id], root=$('[data-ex="'+id+'"]'); if(!root) return;
+  var entries=[], html="";
+  if(ex.type==="select"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i;
+      html+=card(i+1,'<p class="qt">'+it.t.replace("___",sel(k,it.opts))+'</p>',k);
+      entries.push({k:k,a:it.a,why:it.why,opts:it.opts,kind:"select"});
+    });
+  } else if(ex.type==="mc"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i;
+      html+=card(i+1,'<p class="qtitle">'+it.q+'</p>'+radios(k,it.opts),k);
+      entries.push({k:k,a:it.a,why:it.why,opts:it.opts,kind:"radio"});
+    });
+  } else if(ex.type==="sr"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i; SAY[k]=it.say;
+      var inner='<div class="audio-row"><button class="play" data-say="'+k+'" aria-label="Play question '+(i+1)+'" aria-pressed="false">▶</button><span class="plays" data-count="'+k+'">Not played yet</span></div>'+radios(k,it.opts)+'<details><summary>Transcript</summary><div class="script"><p>'+it.say+'</p></div></details>';
+      html+=card(i+1,inner,k);
+      entries.push({k:k,a:it.a,why:it.why,opts:it.opts,kind:"radio"});
+    });
+  } else if(ex.type==="use"){
+    ex.items.forEach(function(it,i){
+      var k=id+"-"+i;
+      html+=card(i+1,'<p class="qt"><i>'+it.t+'</i></p><p class="qt">Reason: '+sel(k,USES)+'</p>',k);
+      entries.push({k:k,a:it.a,why:"",opts:USES,kind:"select"});
+    });
+  } else if(ex.type==="gap"){
+    var n=0;
+    ex.texts.forEach(function(tx,ti){
+      var listId="fbs-"+id+"-"+ti;
+      var body=tx.html.replace(/\[\[(\d+)\]\]/g,function(m,g){
+        var gap=tx.gaps[+g]; n++;
+        var k=id+"-"+ti+"-"+g;
+        entries.push({k:k,a:gap.a,why:gap.why,opts:gap.opts,kind:"select",list:listId,num:n});
+        return '<span class="gapwrap"><sup class="gapn">'+n+'</sup>'+sel(k,gap.opts)+'</span>';
+      });
+      html+='<div class="gaptext"><span class="qn">'+(ti+1)+'</span>'+body+'</div><ul class="fbs" id="'+listId+'"></ul>';
+    });
+  }
+  html+='<div class="bar"><button class="btn" data-check="'+id+'">Check answers</button><button class="btn ghost" data-reveal="'+id+'">Show answers</button><button class="btn ghost" data-reset="'+id+'">Reset</button><span class="score" id="score-'+id+'" aria-live="polite"></span></div>';
+  root.innerHTML=html;
+  STATE[id]={entries:entries};
+}
+
+function getVal(e){
+  if(e.kind==="radio"){var c=$('input[name="'+e.k+'"]:checked');return c?+c.value:null}
+  var s=$('select[data-k="'+e.k+'"]');return s.value===""?null:+s.value;
+}
+function setVal(e,v){
+  if(e.kind==="radio"){var r=$('input[name="'+e.k+'"][value="'+v+'"]');if(r)r.checked=true}
+  else {$('select[data-k="'+e.k+'"]').value=String(v)}
+}
+function clearMarks(e){
+  if(e.kind==="select"){var s=$('select[data-k="'+e.k+'"]');s.classList.remove("ok","ko")}
+  else {$$('#q-'+cssEsc(e.k)+' .opt').forEach(function(o){o.classList.remove("right","wrong")})}
+  var fb=document.getElementById("fb-"+e.k); if(fb) fb.innerHTML="";
+}
+function cssEsc(s){return s.replace(/([^\w-])/g,"\\$1")}
+function mark(e,v){
+  var good=v===e.a;
+  if(e.kind==="select"){$('select[data-k="'+e.k+'"]').classList.add(good?"ok":"ko")}
+  else {
+    $$('#q-'+cssEsc(e.k)+' .opt').forEach(function(o){
+      var i=+o.getAttribute("data-o");
+      if(i===e.a) o.classList.add("right"); else if(i===v) o.classList.add("wrong");
+    });
+  }
+  var head = good ? '<span class="r">✓ Correct.</span> ' : (v===null ? '<span class="w">No answer.</span> Correct answer: <b>'+e.opts[e.a]+'</b>. ' : '<span class="w">✗ Not this one.</span> Correct answer: <b>'+e.opts[e.a]+'</b>. ');
+  var msg = head + (e.why||"");
+  if(e.list){
+    var ul=document.getElementById(e.list);
+    var li=document.createElement("li"); li.innerHTML="<b>"+e.num+".</b> "+msg; ul.appendChild(li);
+  } else {
+    var fb=document.getElementById("fb-"+e.k); if(fb) fb.innerHTML=msg;
+  }
+  return good;
+}
+function check(id,reveal){
+  var st=STATE[id], ok=0;
+  st.entries.forEach(function(e){ if(e.list){ var ul=document.getElementById(e.list); if(ul) ul.innerHTML=""; } });
+  st.entries.forEach(function(e){
+    clearMarks(e);
+    if(reveal) setVal(e,e.a);
+    if(mark(e,getVal(e))) ok++;
+  });
+  $("#score-"+id).textContent = reveal ? "Answers shown" : ok+" / "+st.entries.length;
+  var sec=$('[data-ex="'+id+'"]').closest("section");
+  var step=$('.steps a[data-step="'+sec.id+'"]'); if(step) step.classList.add("done");
+}
+function reset(id){
+  var st=STATE[id];
+  st.entries.forEach(function(e){
+    clearMarks(e);
+    if(e.kind==="radio"){$$('input[name="'+e.k+'"]').forEach(function(r){r.checked=false})}
+    else {$('select[data-k="'+e.k+'"]').value=""}
+    if(e.list){var ul=document.getElementById(e.list); if(ul) ul.innerHTML=""}
+  });
+  $("#score-"+id).textContent="";
+}
+
+Object.keys(EX).forEach(mount);
+var DONE = {}, SCORES = {};
+function partScore(p){
+  var cats = {}, tot = 0, ok = 0;
+  PARTS[p].ex.forEach(function(pair){
+    var id = pair[0], st = STATE[id];
+    st.entries.forEach(function(e, i){
+      var cat = pair[1] === "cat" ? EX[id].items[i].cat : pair[1];
+      cats[cat] = cats[cat] || {ok:0, tot:0};
+      var good = getVal(e) === e.a;
+      cats[cat].tot++; tot++; if(good){ cats[cat].ok++; ok++; }
+    });
+  });
+  return {ok:ok, tot:tot, cats:cats};
+}
+function pct(o){ return Math.round(100*o.ok/o.tot); }
+function bar(p){ return '<span class="rbar"><span style="width:'+p+'%"></span></span>'; }
+function renderPart(p){
+  var r = SCORES[p], h = '<div class="paper"><b>'+PARTS[p].name+': '+r.ok+' / '+r.tot+' ('+pct(r)+'%)</b><table class="rtable">';
+  Object.keys(r.cats).forEach(function(c){ var o=r.cats[c], q=pct(o); h+='<tr class="'+(q<60?'weak':'')+'"><td>'+c+'</td><td>'+o.ok+' / '+o.tot+'</td><td>'+bar(q)+' '+q+'%</td></tr>'; });
+  $("#res-"+p).innerHTML = h + '</table><p class="small">Areas in red are below 60%.</p></div>';
+}
+function renderAll(){
+  if(!(SCORES.L && SCORES.R)) return;
+  var weak = [];
+  ["L","R"].forEach(function(p){ Object.keys(SCORES[p].cats).forEach(function(c){ if(pct(SCORES[p].cats[c])<60) weak.push(PARTS[p].name+" · "+c); }); });
+  var ok = SCORES.L.ok + SCORES.R.ok, tot = SCORES.L.tot + SCORES.R.tot;
+  $("#res-all").innerHTML = '<div class="paper"><b>Total: '+ok+' / '+tot+' ('+Math.round(100*ok/tot)+'%)</b><p style="margin:6px 0 0">'+(weak.length ? 'Areas to work on: <b>'+weak.join(", ")+'</b>' : 'No area below 60%. Well done!')+'</p></div>';
+}
+function finish(p){
+  PARTS[p].ex.forEach(function(pair){ check(pair[0], false); });
+  DONE[p] = true; SCORES[p] = partScore(p);
+  var sec = $('[data-part="'+p+'"]'); sec.classList.add("done");
+  renderPart(p); renderAll();
+  $("#res-"+p).scrollIntoView({block:"start"});
+}
+document.addEventListener("click",function(ev){
+  var b=ev.target.closest("button"); if(!b) return;
+  if(b.dataset.finish) finish(b.dataset.finish);
+  else if(b.dataset.time) setTimer(+b.dataset.time);
+  else if(b.dataset.say) playLines([{w:"A",t:SAY[b.dataset.say]}],b,b.dataset.say);
+  else if(b.dataset.audio) playLines(AUDIO[b.dataset.audio],b,b.dataset.audio);
+});
+$$("[data-script]").forEach(function(el){
+  var id=el.getAttribute("data-script");
+  if(SHOWTEXT[id]){ el.innerHTML="<p><b>"+NAMES[id].A+":</b> "+SHOWTEXT[id]+"</p>"; return; }
+  el.innerHTML=AUDIO[id].map(function(l){return "<p><b>"+NAMES[id][l.w]+":</b> "+l.t+"</p>"}).join("");
+});
+$$("textarea[data-wc]").forEach(function(ta){
+  var wc=$('[data-wc-for="'+ta.getAttribute("data-wc")+'"]'), target=+wc.getAttribute("data-target");
+  ta.addEventListener("input",function(){
+    var n=ta.value.trim()?ta.value.trim().split(/\s+/).length:0;
+    wc.textContent=n; wc.classList.toggle("good",n>=target); wc.classList.toggle("low",n<target);
+  });
+});
+/* ===================== AUDIO (speech synthesis) ===================== */
+var synth = ("speechSynthesis" in window) ? window.speechSynthesis : null;
+var VOICES=[], current=null, counts={};
+function loadVoices(){
+  if(!synth) return;
+  VOICES=synth.getVoices().filter(function(v){return /^en([-_]|$)/i.test(v.lang)});
+}
+if(synth){ loadVoices(); if("onvoiceschanged" in synth) synth.onvoiceschanged=loadVoices; }
+setTimeout(function(){ if(!synth || !VOICES.length){ document.body.classList.add("no-tts") } },2000);
+function voiceFor(who){
+  if(!VOICES.length) return null;
+  var pref=VOICES.filter(function(v){return /GB/i.test(v.lang)}).concat(VOICES.filter(function(v){return /US/i.test(v.lang)}),VOICES);
+  var first=pref[0];
+  var second=pref.filter(function(v){return v.name!==first.name})[0]||first;
+  return who==="B"?second:first;
+}
+function stopAudio(){
+  if(synth) synth.cancel();
+  if(current){current.classList.remove("on");current.setAttribute("aria-pressed","false");current.textContent="▶";current=null}
+}
+function playLines(lines,btn,key){
+  if(!synth){document.body.classList.add("no-tts");return}
+  if(current===btn){stopAudio();return}
+  stopAudio();
+  current=btn; btn.classList.add("on"); btn.setAttribute("aria-pressed","true"); btn.textContent="■";
+  counts[key]=(counts[key]||0)+1;
+  var c=$('[data-count="'+key+'"]'); if(c) c.textContent="Played "+counts[key]+(counts[key]===1?" time":" times");
+  var rate=parseFloat($("#rate").value)||0.92;
+  var chunks=[];
+  lines.forEach(function(l){ l.t.split(/(?<=[.!?])\s+/).forEach(function(s){ if(s.trim()) chunks.push({w:l.w,t:s}) }) });
+  chunks.forEach(function(ch,i){
+    var u=new SpeechSynthesisUtterance(ch.t);
+    var v=voiceFor(ch.w);
+    if(v){u.voice=v;u.lang=v.lang}else{u.lang="en-GB"}
+    u.rate=rate; u.pitch=ch.w==="B"?0.8:1.05;
+    if(i===chunks.length-1){u.onend=function(){ if(current===btn) stopAudio() }}
+    synth.speak(u);
+  });
+}
+
+/* ===================== TIMER ===================== */
+var T={left:0,h:null,run:false};
+var tEl=$("#timer");
+function drawT(){
+  var m=Math.floor(T.left/60), s=T.left%60;
+  $("#tm").textContent=(m<10?"0":"")+m; $("#ts").textContent=(s<10?"0":"")+s;
+  tEl.classList.toggle("paused",!T.run);
+}
+function tick(){
+  if(T.left>0){T.left--;drawT()}
+  if(T.left<=0){clearInterval(T.h);T.run=false;drawT();tEl.classList.remove("done");void tEl.offsetWidth;tEl.classList.add("done")}
+}
+function startT(){clearInterval(T.h);T.run=true;T.h=setInterval(tick,1000);drawT()}
+function setTimer(min){T.left=min*60;tEl.classList.remove("done");startT()}
+tEl.addEventListener("click",function(){
+  if(T.left<=0) return;
+  if(T.run){clearInterval(T.h);T.run=false;drawT()} else startT();
+});
+drawT();
+
+/* ===================== TOGGLES ===================== */
+$("#teacherBtn").addEventListener("click",function(){
+  var on=document.body.classList.toggle("teacher");
+  this.setAttribute("aria-pressed",on?"true":"false");
+});
+var themeBtn=$("#themeBtn");
+function isDark(){
+  var t=document.documentElement.getAttribute("data-theme");
+  if(t) return t==="dark";
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+function syncTheme(){themeBtn.textContent=isDark()?"Light mode":"Dark mode"}
+themeBtn.addEventListener("click",function(){
+  document.documentElement.setAttribute("data-theme",isDark()?"light":"dark"); syncTheme();
+});
+syncTheme();
+
+/* ===================== ACTIVE STEP ===================== */
+var links=$$(".steps a");
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(en){
+      if(en.isIntersecting){
+        links.forEach(function(a){a.classList.toggle("active",a.dataset.step===en.target.id)});
+        var act=$('.steps a.active'), nav=$("#steps"); if(act && nav) nav.scrollLeft=act.offsetLeft-nav.clientWidth/2+act.clientWidth/2;
+      }
+    });
+  },{rootMargin:"-40% 0px -55% 0px"});
+  $$("section.block").forEach(function(s){io.observe(s)});
+}
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+var PAGE = document.body.getAttribute("data-page") || "page";
+var KEY = "lpt-answers-" + PAGE, PKEY = "lpt-progress-" + PAGE;
+function load(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch(e){ return null; } }
+function save(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+function $$(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+
+/* ---------- restore saved answers ---------- */
+var saved = load(KEY) || {};
+$$("select[data-k]").forEach(function(el){ var v = saved["s:" + el.getAttribute("data-k")]; if (v != null) el.value = v; });
+$$("input[type=radio]").forEach(function(el){ if (saved["r:" + el.name] === el.value) el.checked = true; });
+$$("textarea[id], input[type=text]").forEach(function(el, i){ var id = el.id || ("t" + i); var v = saved["t:" + id]; if (v != null) { el.value = v; el.dispatchEvent(new Event("input")); } });
+
+function collect(){
+  var o = {};
+  $$("select[data-k]").forEach(function(el){ if (el.value !== "") o["s:" + el.getAttribute("data-k")] = el.value; });
+  $$("input[type=radio]:checked").forEach(function(el){ o["r:" + el.name] = el.value; });
+  $$("textarea[id], input[type=text]").forEach(function(el, i){ var id = el.id || ("t" + i); if (el.value.trim()) o["t:" + id] = el.value; });
+  save(KEY, o);
+}
+
+/* ---------- progress ---------- */
+function words(t){ t = t.trim(); return t ? t.split(/\s+/).length : 0; }
+function measure(root){
+  var tot = 0, done = 0;
+  $$("select[data-k]", root).forEach(function(el){ tot++; if (el.value !== "") done++; });
+  var groups = {};
+  $$("input[type=radio]", root).forEach(function(el){ groups[el.name] = groups[el.name] || el.checked; });
+  Object.keys(groups).forEach(function(k){ tot++; if (groups[k]) done++; });
+  $$("input[type=text]", root).forEach(function(el){ tot++; if (el.value.trim()) done++; });
+  $$("textarea", root).forEach(function(el){
+    var wc = el.getAttribute("data-wc"), target = 0;
+    if (wc) { var t = document.querySelector('[data-wc-for="' + wc + '"]'); target = t ? +t.getAttribute("data-target") : 0; }
+    tot++; done += target ? Math.min(1, words(el.value) / target) : (el.value.trim() ? 1 : 0);
+  });
+  return { tot: tot, done: done };
+}
+var sections = $$("section.block").map(function(sec){
+  var m = measure(sec); if (!m.tot) return null;
+  var bar = document.createElement("div");
+  bar.className = "sprog";
+  bar.innerHTML = '<span class="sprog-track"><span class="sprog-fill"></span></span><span class="sprog-txt">0% completed</span>';
+  var head = sec.querySelector(".sec-head");
+  if (head) head.insertAdjacentElement("afterend", bar); else sec.insertBefore(bar, sec.firstChild);
+  return { sec: sec, bar: bar };
+}).filter(Boolean);
+
+var top = document.createElement("div");
+top.className = "tprog";
+top.innerHTML = '<span class="tprog-track"><span class="tprog-fill"></span></span><span class="tprog-txt">Session progress: 0%</span>';
+var header = document.querySelector("header.top");
+if (header) header.appendChild(top);
+
+function update(){
+  var T = 0, D = 0;
+  sections.forEach(function(x){
+    var m = measure(x.sec), p = Math.round(100 * m.done / m.tot);
+    T += m.tot; D += m.done;
+    x.bar.querySelector(".sprog-fill").style.width = p + "%";
+    x.bar.querySelector(".sprog-txt").textContent = p === 100 ? "100% completed ✓" : p + "% completed";
+    x.bar.classList.toggle("full", p === 100);
+    var step = document.querySelector('.steps a[data-step="' + x.sec.id + '"]');
+    if (step) step.classList.toggle("done", p === 100);
+  });
+  var tp = T ? Math.round(100 * D / T) : 0;
+  top.querySelector(".tprog-fill").style.width = tp + "%";
+  top.querySelector(".tprog-txt").textContent = "Session progress: " + tp + "%";
+  save(PKEY, tp);
+}
+var timer = null;
+function soon(){ clearTimeout(timer); timer = setTimeout(function(){ collect(); update(); }, 60); }
+document.addEventListener("change", soon);
+document.addEventListener("input", soon);
+document.addEventListener("click", function(ev){ if (ev.target.closest("button")) soon(); });
+update();
+})();
+
+</script>
+</body>
+</html>
